@@ -322,6 +322,8 @@ function submitPressed(event) {
     storeGuesses();
     if (finished && !isCorrect) {
         let modal = document.getElementById("lostModal")
+        let shareText = document.getElementById("share-text2");
+        shareText.innerHTML = generateResults(false);
         let modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
