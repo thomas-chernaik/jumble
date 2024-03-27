@@ -450,7 +450,7 @@ function generateResults(plaintext) {
                 }
                 //if the letter is wrong, change the class to guess-incorrect btn-custom
                 else {
-                    results += "⚫ ";
+                    results += "🔵 ";
                 }
             }
         }
