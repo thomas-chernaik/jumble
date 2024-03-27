@@ -3,6 +3,8 @@ let seed = 0;
 let currentGuess = "";
 let phrase = "";
 let finished = false;
+let results = "";
+let todaysDay = 0;
 
 //get the json data from the file (jumble.json)
 fetch('jumble.json')
@@ -19,6 +21,7 @@ function daysAfter2024() {
     const diff = now - start;
     const oneDay = 1000 * 60 * 60 * 24;
     const days = Math.floor(diff / oneDay);
+    todaysDay = days;
     return days;
 }
 
@@ -247,6 +250,7 @@ function submitPressed(event) {
         return;
 
     }
+    let guessString = "";
     //go through each letter in the current guess
     let guessArray = currentGuess.split("");
     //if there are any _ in the guess, return
@@ -281,10 +285,14 @@ function submitPressed(event) {
                 guessElement.children[i].className = "guess-incorrect btn-custom";
             }
         }
+        results += guessString + "\n";
     }
     if (isCorrect) {
         //bring up a modal with an image in it
         let modal = document.getElementById("wonModal")
+        //set the share-text
+        let shareText = document.getElementById("share-text");
+        shareText.innerHTML = generateResults();
         let modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
         finished = true;
@@ -292,12 +300,11 @@ function submitPressed(event) {
     //rename the jumble guess to jumble guessed
     let guessElement = document.getElementById("jumble guess");
     guessElement.id = "jumble guessed";
-    createInput();
-    backspacePressed(null);
-//update the trys remaining
+    //update the trys remaining
     let trysRemaining = document.getElementById("trys-remaining");
     //loop through the children of trys remaining
     let trysRemainingChildren = trysRemaining.children;
+    finished = true;
     for (let i = 0; i < trysRemainingChildren.length; i++) {
         //if the image is dot.png, change it to redDot.png
         if (trysRemainingChildren[i].src.includes("dot.png")) {
@@ -306,10 +313,20 @@ function submitPressed(event) {
             }
             else {
                 trysRemainingChildren[i].src = "icons/redDot.png";
+                if(i != trysRemainingChildren.length - 1)
+                    finished = false;
             }
             break;
         }
     }
+    if(finished && !isCorrect){
+        let modal = document.getElementById("lostModal")
+        let modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+    }
+    createInput();
+    backspacePressed(null);
+
 
 
 }
@@ -388,6 +405,26 @@ function handleKeyPress(event) {
         submitButton.click();
     }
 }
+function generateResults()
+{
+    let fullResults = "Jumble " + todaysDay + "\n";
+    fullResults += "Theme: " + words[todaysDay].theme + "\n";
+    fullResults += results;
+    return results;
+}
 
 //add the event listener
 document.addEventListener("keydown", handleKeyPress);
+
+document.getElementById('shareButton').addEventListener('click', async () => {
+    try {
+        await navigator.share({
+            title: 'Jumble',
+            text: 'Check out this awesome game!',
+            url: window.location.href,
+        });
+        console.log('Data was shared successfully');
+    } catch (err) {
+        console.log('Failed to share:', err);
+    }
+});
