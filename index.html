@@ -29,7 +29,6 @@
         #trys-container {
             text-align: center;
             margin-top: 50px;
-            font-family: Futura-light, sans-serif;
             font-size: 30px;
             color: #e3c1c1;
         }
@@ -44,13 +43,14 @@
 
         /* Adjusting button size and styling */
         .btn-custom {
-            max-width: 30px;
+            max-width: 40px;
+            min-width: 30px;
             width: 5%;
             height: 40px;
             border-radius: 3px;
             font-size: 1.2rem;
             padding: 5px; /* Padding between buttons */
-            margin: 5px; /* Margin between buttons */
+            margin: 1px; /* Margin between buttons */
             color: #f0f0f0; /* Light Text */
             border: 1px solid #000; /* Black Border */
             cursor: pointer;
@@ -100,7 +100,7 @@
             border-radius: 3px;
             font-size: 1.2rem;
             padding: 5px; /* Padding between buttons */
-            margin: 5px; /* Margin between buttons */
+            margin: 0px; /* Margin between buttons */
             background-opacity: 0; /* Dark Gray */
             color: #f0f0f0; /* Light Text */
             cursor: pointer;
@@ -164,6 +164,10 @@
             font-family: 'Protest Strike';
             src: url('fonts/ProtestStrike-Regular.ttf') format('truetype');
         }
+        @font-face {
+            font-family: 'Futura';
+            src: url('fonts/Futura.ttf') format('truetype');
+        }
     </style>
 </head>
 <body>
@@ -209,7 +213,7 @@
       </div>
       <div class="modal-body">
         <img src="icons/fireworks.gif" alt="one firework" class="img-fluid">
-          <div id="share-text">share etc</div>
+          <div id="share-text1">share etc</div>
           <button type="button" class="btn btn-primary" id="shareButton">Share</button>
       </div>
       <div class="modal-footer">
@@ -227,7 +231,7 @@
       </div>
       <div class="modal-body">
         <img src="icons/cry.gif" alt="emoji disappearing into dust" class="img-fluid">
-          <div id="share-text">share etc</div>
+          <div id="share-text2">share etc</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

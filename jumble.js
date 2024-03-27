@@ -5,6 +5,7 @@ let phrase = "";
 let finished = false;
 let results = "";
 let todaysDay = 0;
+let guesses = [];
 
 //get the json data from the file (jumble.json)
 fetch('jumble.json')
@@ -13,6 +14,8 @@ fetch('jumble.json')
         words = JSON.parse(data);
         console.log(words);
         loadStuff(words);
+        loadGuesses();
+
     });
 
 function daysAfter2024() {
@@ -176,11 +179,14 @@ function buttonPressed(event) {
     if (event.target.parentElement.id === "jumble keyboard") {
         //check if the class contains btn-clicked
         if (event.target.className.includes("btn-clicked")) {
-            //remove the letter from the current guess
-            let value = event.target.value;
-            let guessArray = currentGuess.split("");
-            guessArray[value] = "_";
-            currentGuess = guessArray.join("");
+            //get the value of the button
+            for(let i = currentGuess.length - 1; i >= 0; i--) {
+                console.log("Checking " + currentGuess[i] + " against " + event.target.innerHTML)
+                if (currentGuess[i] === event.target.innerHTML) {
+                    currentGuess = currentGuess.substring(0, i) + "_" + currentGuess.substring(i + 1);
+                    break;
+                }
+            }
             //switch the class to btn-unclicked
             event.target.className = "btn-unclicked btn-custom";
             updateGuess();
@@ -195,8 +201,6 @@ function buttonPressed(event) {
         for (let i = 0; i < guessArray.length; i++) {
             if (guessArray[i] === "_") {
                 guessArray[i] = letter;
-                //store the value of i on the element
-                event.target.value = i;
                 break;
             }
         }
@@ -210,6 +214,7 @@ function buttonPressed(event) {
             //work out what number child this is
             let value = Array.prototype.indexOf.call(event.target.parentElement.children, event.target);
             let guessArray = currentGuess.split("");
+            let prevValue = guessArray[value];
             guessArray[value] = "_";
             currentGuess = guessArray.join("");
             //switch the class to btn-unclicked
@@ -219,9 +224,12 @@ function buttonPressed(event) {
             let keyboard = document.getElementById("jumble keyboard");
             let keyboardChildren = keyboard.children;
             for (let i = 0; i < keyboardChildren.length - 2; i++) {
-                if (keyboardChildren[i].value === value) {
-                    keyboardChildren[i].className = "btn-unclicked btn-custom";
-                    break;
+                console.log("Checking " + keyboardChildren[i].innerHTML + " against " + prevValue)
+                if (keyboardChildren[i].innerHTML === prevValue) {
+                    if (keyboardChildren[i].className.includes("btn-clicked")) {
+                        keyboardChildren[i].className = "btn-unclicked btn-custom";
+                        break;
+                    }
                 }
             }
         }
@@ -308,25 +316,26 @@ function submitPressed(event) {
     for (let i = 0; i < trysRemainingChildren.length; i++) {
         //if the image is dot.png, change it to redDot.png
         if (trysRemainingChildren[i].src.includes("dot.png")) {
-            if(isCorrect){
+            if (isCorrect) {
                 trysRemainingChildren[i].src = "icons/greenDot.png";
-            }
-            else {
+            } else {
                 trysRemainingChildren[i].src = "icons/redDot.png";
-                if(i != trysRemainingChildren.length - 1)
+                if (i != trysRemainingChildren.length - 1)
                     finished = false;
             }
             break;
         }
     }
-    if(finished && !isCorrect){
+    if (finished && !isCorrect) {
         let modal = document.getElementById("lostModal")
         let modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
+    //store the guess
+    guesses.push(currentGuess);
+    storeGuesses();
     createInput();
     backspacePressed(null);
-
 
 
 }
@@ -386,9 +395,11 @@ function handleKeyPress(event) {
                 let keyboard = document.getElementById("jumble keyboard");
                 let keyboardChildren = keyboard.children;
                 for (let j = 0; j < keyboardChildren.length - 2; j++) {
-                    if (keyboardChildren[j].value === i) {
-                        keyboardChildren[j].className = "btn-unclicked btn-custom";
-                        break;
+                    if (keyboardChildren[j].innerHTML === phrase[i]) {
+                        if (keyboardChildren[j].className.includes("btn-clicked")) {
+                            keyboardChildren[j].className = "btn-unclicked btn-custom";
+                            break;
+                        }
                     }
                 }
 
@@ -405,8 +416,8 @@ function handleKeyPress(event) {
         submitButton.click();
     }
 }
-function generateResults()
-{
+
+function generateResults() {
     let fullResults = "Jumble " + todaysDay + "\n";
     fullResults += "Theme: " + words[todaysDay].theme + "\n";
     fullResults += results;
@@ -416,7 +427,53 @@ function generateResults()
 //add the event listener
 document.addEventListener("keydown", handleKeyPress);
 
-document.getElementById('shareButton').addEventListener('click', async () => {
+
+function storeGuesses(){
+    //store the guesses in local storage, set to expire at midnight
+    let date = new Date();
+    let midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+    let expiry = midnight.getTime();
+    //store the guesses
+    localStorage.setItem("guesses", JSON.stringify(guesses));
+    localStorage.setItem("expiry", expiry);
+}
+function loadGuesses(){
+    //load the guesses from local storage
+    let date = new Date();
+    let expiry = localStorage.getItem("expiry");
+    if (expiry < date.getTime()){
+        //clear the guesses
+        guesses = [];
+        storeGuesses();
+    }
+    else{
+        tempGuesses = JSON.parse(localStorage.getItem("guesses"));
+        //make the guesses
+        //for each guess
+        for (let i = 0; i < tempGuesses.length; i++){
+            let guess = tempGuesses[i];
+            currentGuess = guess;
+            //update the text for the guess
+            updateGuess();
+            submitPressed(null);
+        }
+        guesses = tempGuesses;
+    }
+}
+//on page load, load the guesses
+document.getElementById('share-text1').addEventListener('click', async () => {
+    try {
+        await navigator.share({
+            title: 'Jumble',
+            text: 'Check out this awesome game!',
+            url: window.location.href,
+        });
+        console.log('Data was shared successfully');
+    } catch (err) {
+        console.log('Failed to share:', err);
+    }
+});
+document.getElementById('share-text2').addEventListener('click', async () => {
     try {
         await navigator.share({
             title: 'Jumble',
