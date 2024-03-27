@@ -180,7 +180,7 @@ function buttonPressed(event) {
         //check if the class contains btn-clicked
         if (event.target.className.includes("btn-clicked")) {
             //get the value of the button
-            for(let i = currentGuess.length - 1; i >= 0; i--) {
+            for (let i = currentGuess.length - 1; i >= 0; i--) {
                 console.log("Checking " + currentGuess[i] + " against " + event.target.innerHTML)
                 if (currentGuess[i] === event.target.innerHTML) {
                     currentGuess = currentGuess.substring(0, i) + "_" + currentGuess.substring(i + 1);
@@ -295,16 +295,7 @@ function submitPressed(event) {
         }
         results += guessString + "\n";
     }
-    if (isCorrect) {
-        //bring up a modal with an image in it
-        let modal = document.getElementById("wonModal")
-        //set the share-text
-        let shareText = document.getElementById("share-text");
-        shareText.innerHTML = generateResults();
-        let modalInstance = new bootstrap.Modal(modal);
-        modalInstance.show();
-        finished = true;
-    }
+
     //rename the jumble guess to jumble guessed
     let guessElement = document.getElementById("jumble guess");
     guessElement.id = "jumble guessed";
@@ -326,14 +317,25 @@ function submitPressed(event) {
             break;
         }
     }
+    //store the guess
+    guesses.push(currentGuess);
+    storeGuesses();
     if (finished && !isCorrect) {
         let modal = document.getElementById("lostModal")
         let modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
-    //store the guess
-    guesses.push(currentGuess);
-    storeGuesses();
+    if (isCorrect) {
+        //bring up a modal with an image in it
+        let modal = document.getElementById("wonModal")
+        //set the share-text
+        let shareText = document.getElementById("share-text1");
+        shareText.innerHTML = generateResults(false);
+        let modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+        finished = true;
+    }
+
     createInput();
     backspacePressed(null);
 
@@ -417,18 +419,58 @@ function handleKeyPress(event) {
     }
 }
 
-function generateResults() {
-    let fullResults = "Jumble " + todaysDay + "\n";
-    fullResults += "Theme: " + words[todaysDay].theme + "\n";
-    fullResults += results;
-    return results;
+function generateResults(plaintext) {
+    let fullResults = "Jumble " + todaysDay
+    fullResults += "<br>";
+    fullResults += "Theme: " + words[todaysDay].theme;
+    console.log(fullResults);
+
+    //construct the results from the guesses
+    for (let i = 0; i < guesses.length; i++) {
+        let guess = guesses[i];
+        let guessArray = guess.split("");
+        let phraseArray = phrase.split("");
+        let wordsSplit = phrase.split(" ");
+        let currentWord = 0;
+        for (let j = 0; j < guessArray.length; j++) {
+            //if this is a space, skip
+            if (phraseArray[j] === " ") {
+                currentWord++;
+                results += "-";
+                continue;
+            }
+            //if the letter matches, change the class to guess-correct btn-custom
+            if (guessArray[j] === phraseArray[j]) {
+
+                //green circle emoji
+                results += "🟢 "
+            } else {
+                if (wordsSplit[currentWord].includes(guessArray[j])) {
+                    results += "🟡 "
+                }
+                //if the letter is wrong, change the class to guess-incorrect btn-custom
+                else {
+                    results += "⚫ ";
+                }
+            }
+        }
+        results += "<br>";
+    }
+    fullResults += "<br>" + results;
+    if (plaintext) {
+        //go through full results and replace the <br> with \n
+        fullResults = fullResults.replace(/<br>/g, "\n");
+        //remove any duplicate new lines
+        fullResults = fullResults.replace(/\n\n/g, "\n");
+    }
+    return fullResults;
 }
 
 //add the event listener
 document.addEventListener("keydown", handleKeyPress);
 
 
-function storeGuesses(){
+function storeGuesses() {
     //store the guesses in local storage, set to expire at midnight
     let date = new Date();
     let midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
@@ -437,20 +479,20 @@ function storeGuesses(){
     localStorage.setItem("guesses", JSON.stringify(guesses));
     localStorage.setItem("expiry", expiry);
 }
-function loadGuesses(){
+
+function loadGuesses() {
     //load the guesses from local storage
     let date = new Date();
     let expiry = localStorage.getItem("expiry");
-    if (expiry < date.getTime()){
+    if (expiry < date.getTime()) {
         //clear the guesses
         guesses = [];
         storeGuesses();
-    }
-    else{
+    } else {
         tempGuesses = JSON.parse(localStorage.getItem("guesses"));
         //make the guesses
         //for each guess
-        for (let i = 0; i < tempGuesses.length; i++){
+        for (let i = 0; i < tempGuesses.length; i++) {
             let guess = tempGuesses[i];
             currentGuess = guess;
             //update the text for the guess
@@ -460,28 +502,58 @@ function loadGuesses(){
         guesses = tempGuesses;
     }
 }
+
+window.onload = function () {
 //on page load, load the guesses
-document.getElementById('share-text1').addEventListener('click', async () => {
-    try {
-        await navigator.share({
-            title: 'Jumble',
-            text: 'Check out this awesome game!',
-            url: window.location.href,
-        });
-        console.log('Data was shared successfully');
-    } catch (err) {
-        console.log('Failed to share:', err);
-    }
-});
-document.getElementById('share-text2').addEventListener('click', async () => {
-    try {
-        await navigator.share({
-            title: 'Jumble',
-            text: 'Check out this awesome game!',
-            url: window.location.href,
-        });
-        console.log('Data was shared successfully');
-    } catch (err) {
-        console.log('Failed to share:', err);
-    }
-});
+    document.getElementById('shareButton1').addEventListener('click', async () => {
+        console.log("share button pressed");
+        try {
+            //check if sharing is supported
+            if (!navigator.share) {
+                console.log('Web Share API not supported');
+                //copy the results to the clipboard
+                navigator.clipboard.writeText(generateResults(true));
+                //display a toast
+                let toast = document.getElementById("toast");
+                toast.className = "show";
+                setTimeout(function () {
+                    toast.className = toast.className.replace("show", "hidden");
+                }, 3000);
+                return;
+            }
+            await navigator.share({
+                title: 'Jumble',
+                text: generateResults(true),
+                url: window.location.href,
+            });
+            console.log('Data was shared successfully');
+        } catch (err) {
+            console.log('Failed to share:', err);
+        }
+    });
+    document.getElementById('shareButton2').addEventListener('click', async () => {
+        try {
+            //check if sharing is supported
+            if (!navigator.share) {
+                console.log('Web Share API not supported');
+                //copy the results to the clipboard
+                navigator.clipboard.writeText(generateResults(true));
+                //display a toast
+                let toast = document.getElementById("toast2");
+                toast.className = "show";
+                setTimeout(function () {
+                    toast.className = toast.className.replace("show", "hidden");
+                }, 3000);
+                return;
+            }
+            await navigator.share({
+                title: 'Jumble',
+                text: generateResults(true),
+                url: window.location.href,
+            });
+            console.log('Data was shared successfully');
+        } catch (err) {
+            console.log('Failed to share:', err);
+        }
+    });
+}

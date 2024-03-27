@@ -135,15 +135,49 @@
             color: #3e6969;
         }
 
+        #toast {
+            color: #3e6969;
+            font-family: 'Futura', sans-serif;
+            font-size: 10px;
+            padding: 3px;
+
+        }
+        .hidden{
+            display: none;
+        }
+        .show {
+            display: block;
+        }
+
+        #top {
+            vertical-align: top;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #bottom {
+            vertical-align: bottom;
+            display: flex;
+            flex-direction: column;
+        }
+
         #wonTitle {
             color: goldenrod;
         }
-        #lostTitle{
+
+        #lostTitle {
             color: #420f0f;
         }
-        #share-text{
+
+        #share-text1 {
             color: #181717;
-            font-size: 20px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        #share-text2 {
+            color: #181717;
+            font-size: 15px;
             text-align: center;
         }
 
@@ -160,10 +194,16 @@
             justify-content: center;
         }
 
+        .flex-container {
+            display: flex;
+            align-items: center; /* Optional: if you want to align the items vertically */
+        }
+
         @font-face {
             font-family: 'Protest Strike';
             src: url('fonts/ProtestStrike-Regular.ttf') format('truetype');
         }
+
         @font-face {
             font-family: 'Futura';
             src: url('fonts/Futura.ttf') format('truetype');
@@ -205,40 +245,47 @@
         </div>
     </div>
     <div class="modal fade" id="wonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="wonTitle">Well done for solving today's Jumble</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <img src="icons/fireworks.gif" alt="one firework" class="img-fluid">
-          <div id="share-text1">share etc</div>
-          <button type="button" class="btn btn-primary" id="shareButton">Share</button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="wonTitle">Well done for solving today's Jumble</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="icons/fireworks.gif" alt="one firework" class="img-fluid">
+                    <div id="share-text1">share etc</div>
+                    <div class="flex-container">
+                        <button type="button" class="btn btn-primary" id="shareButton1">Share</button>
+                        <span id="toast" class="hidden"><span id="top">copied to</span><span id="bottom">  clipboard</span></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
     <div class="modal fade" id="lostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lostTitle">You failed to solve todays modal</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <img src="icons/cry.gif" alt="emoji disappearing into dust" class="img-fluid">
-          <div id="share-text2">share etc</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="lostTitle">You failed to solve todays modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="icons/cry.gif" alt="emoji disappearing into dust" class="img-fluid">
+                    <div id="share-text2">share etc</div>
+                    <div class="flex-container">
+                        <button type="button" class="btn btn-primary" id="shareButton2">Share</button>
+                        <span id="toast2" class="hidden"><span id="top">copied to</span><span id="bottom">  clipboard</span></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 </div>
 
 <!-- Bootstrap Bundle with Popper -->
