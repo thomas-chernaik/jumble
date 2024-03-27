@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumble</title>
+
+    <!-- Import Futura font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Futura:wght@700&display=swap">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style src="styles.css"></style>
+    <script src="jumble.js"></script>
+
+    <style>
+        body {
+            background-color: #191970; /* Midnight Blue */
+            color: #f0f0f0; /* Light Text */
+            font-family: 'Protest Strike', sans-serif;
+
+        }
+
+        /* Centered Element */
+        #theme-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #trys-container {
+            text-align: center;
+            margin-top: 50px;
+            font-family: Futura-light, sans-serif;
+            font-size: 30px;
+            color: #e3c1c1;
+        }
+
+        #theme {
+            background-color: #2f4f4f; /* Dark Gray */
+            padding: 10px 20px; /* Padding for theme */
+            display: inline-block; /* To align with Today's theme text */
+            border-radius: 3px;
+        }
+
+
+        /* Adjusting button size and styling */
+        .btn-custom {
+            max-width: 30px;
+            width: 5%;
+            height: 40px;
+            border-radius: 3px;
+            font-size: 1.2rem;
+            padding: 5px; /* Padding between buttons */
+            margin: 5px; /* Margin between buttons */
+            color: #f0f0f0; /* Light Text */
+            border: 1px solid #000; /* Black Border */
+            cursor: pointer;
+            text-align: center;
+            font-family: 'Futura', sans-serif;
+        }
+
+        .btn-unclicked {
+            background-color: #2f4f4f; /* Dark Gray */
+        }
+
+        .btn-clicked {
+            background-color: #467070; /* Dark Gray */
+
+        }
+
+        .btn-guessed {
+            background-color: #467070; /* Dark Gray */
+
+        }
+
+        .btn-unguessed {
+            background-color: #2f4f4f; /* Dark Gray */
+            color: #2f4f4f;
+        }
+
+        .guess-incorrect {
+            background-color: #000000;
+            color: wheat;
+        }
+
+        .guess-correct {
+            background-color: lightblue;
+            color: black;
+        }
+
+        .guess-correctWord {
+            background-color: wheat;
+            color: black;
+        }
+
+
+        .dash {
+            max-width: 50px;
+            width: 5%;
+            height: 40px;
+            border-radius: 3px;
+            font-size: 1.2rem;
+            padding: 5px; /* Padding between buttons */
+            margin: 5px; /* Margin between buttons */
+            background-opacity: 0; /* Dark Gray */
+            color: #f0f0f0; /* Light Text */
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-submit {
+            /*small font and dark color*/
+            font-size: 14px;
+            font-align: center;
+            background-color: #2f4f4f; /* Dark Gray */
+            min-width: 55px;
+            /* no internal padding */
+            padding: 0;
+            line-height: 14px;
+            /* bold text */
+            font-weight: bold;
+            color: #5a9898;
+        }
+
+        .btn-backspace {
+            /*small font and dark color*/
+            font-size: 14px;
+            font-align: center;
+            background-color: #2f4f4f; /* Dark Gray */
+            min-width: 55px;
+            /* no internal padding */
+            padding: 0;
+            line-height: 14px;
+            /* bold text */
+            font-weight: bold;
+            color: #3e6969;
+        }
+
+        #wonTitle {
+            color: goldenrod;
+        }
+
+
+        /* Styling for Today's theme text */
+        #theme-text {
+            color: #f0f0f0; /* Light Text */
+            margin-right: 10px; /* Spacing between text and theme */
+        }
+
+        .group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        @font-face {
+            font-family: 'Protest Strike';
+            src: url('fonts/ProtestStrike-Regular.ttf') format('truetype');
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="title" class="text-center mt-5">
+        <h1>Jumble</h1>
+    </div>
+    <div id="theme-container">
+        <span id="theme-text">Today's theme is:</span>
+        <div id="theme">
+            Centered Element
+        </div>
+
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-12" id="guess-container">
+
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-12">
+            <div class="group" role="group" aria-label="Button Group" id="jumble keyboard">
+            </div>
+        </div>
+    </div>
+    <div id="trys-container">
+        <div id="trys-remaining">
+            <img src="icons/dot.png" alt="dot" width="30" height="30">
+            <img src="icons/dot.png" alt="dot" width="30" height="30">
+            <img src="icons/dot.png" alt="dot" width="30" height="30">
+            <img src="icons/dot.png" alt="dot" width="30" height="30">
+            <img src="icons/dot.png" alt="dot" width="30" height="30">
+            <img src="icons/dot.png" alt="dot" width="30" height="30">
+        </div>
+    </div>
+    <div class="modal fade" id="wonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="wonTitle">Well done for solving today's Jumble</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="icons/fireworks.gif" alt="Your Image" class="img-fluid">
+          <div id="share-text">ahksdhjf</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
