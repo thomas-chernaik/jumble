@@ -142,9 +142,11 @@
             padding: 3px;
 
         }
-        .hidden{
+
+        .hidden {
             display: none;
         }
+
         .show {
             display: block;
         }
@@ -208,11 +210,41 @@
             font-family: 'Futura';
             src: url('fonts/Futura.ttf') format('truetype');
         }
+        #helpTitle{
+            color: #000000;
+            font-family: Arial;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        #help-text{
+            color: #6c5d5d;
+            font-family: Arial;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* CSS */
+        #helpButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid wheat;
+            border-radius: 50%;
+            background-color: transparent;
+            color: wheat;
+            font-size: 24px;
+            text-align: center;
+            font-family: "arial";
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <button id="helpButton" data-bs-toggle="modal" data-bs-target="#helpModal">?</button>
     <div id="title" class="text-center mt-5">
         <h1>Jumble</h1>
     </div>
@@ -256,7 +288,8 @@
                     <div id="share-text1">share etc</div>
                     <div class="flex-container">
                         <button type="button" class="btn btn-primary" id="shareButton1">Share</button>
-                        <span id="toast" class="hidden"><span id="top">copied to</span><span id="bottom">  clipboard</span></span>
+                        <span id="toast" class="hidden"><span id="top">copied to</span><span
+                                id="bottom">  clipboard</span></span>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -277,8 +310,40 @@
                     <div id="share-text2">share etc</div>
                     <div class="flex-container">
                         <button type="button" class="btn btn-primary" id="shareButton2">Share</button>
-                        <span id="toast2" class="hidden"><span id="top">copied to</span><span id="bottom">  clipboard</span></span>
+                        <span id="toast2" class="hidden"><span id="top">copied to</span><span
+                                id="bottom">  clipboard</span></span>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpTitle">How to play</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="help-text">
+                                                <h4>
+
+                        The aim of the game is to solve the jumble by rearranging the letters to form the correct word.
+                        <br>
+                        <br>
+                        You will recieve 6 attempts to solve the jumble, and recieve feedback on each attempt.
+                        <br>
+                        <br>
+                        A correct letter will be highlighted in light blue, a letter in the correct word but in the wrong position will be highlighted in yellow, and an incorrect letter will be highlighted in red.
+                        <br>
+                        <br>
+                        Good luck!
+                        </h4>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -525,7 +525,6 @@ window.onload = function () {
             await navigator.share({
                 title: 'Jumble',
                 text: generateResults(true),
-                url: window.location.href,
             });
             console.log('Data was shared successfully');
         } catch (err) {
@@ -550,7 +549,6 @@ window.onload = function () {
             await navigator.share({
                 title: 'Jumble',
                 text: generateResults(true),
-                url: window.location.href,
             });
             console.log('Data was shared successfully');
         } catch (err) {
