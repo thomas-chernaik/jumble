@@ -424,7 +424,7 @@ function generateResults(plaintext) {
     fullResults += "<br>";
     fullResults += "Theme: " + words[todaysDay].theme;
     console.log(fullResults);
-
+    results = "";
     //construct the results from the guesses
     for (let i = 0; i < guesses.length; i++) {
         let guess = guesses[i];
@@ -436,7 +436,7 @@ function generateResults(plaintext) {
             //if this is a space, skip
             if (phraseArray[j] === " ") {
                 currentWord++;
-                results += "-";
+                results += "- ";
                 continue;
             }
             //if the letter matches, change the class to guess-correct btn-custom
@@ -456,6 +456,7 @@ function generateResults(plaintext) {
         }
         results += "<br>";
     }
+    console.log(results);
     fullResults += "<br>" + results;
     if (plaintext) {
         //go through full results and replace the <br> with \n
