@@ -60,10 +60,12 @@
 
         .btn-unclicked {
             background-color: #2f4f4f; /* Dark Gray */
+            position: relative;
         }
 
         .btn-clicked {
             background-color: #467070; /* Dark Gray */
+            position: relative;
 
         }
 
@@ -112,13 +114,16 @@
             font-size: 14px;
             font-align: center;
             background-color: #2f4f4f; /* Dark Gray */
-            min-width: 55px;
+            min-width: 50px;
             /* no internal padding */
             padding: 0;
             line-height: 14px;
             /* bold text */
             font-weight: bold;
             color: #5a9898;
+            align-items: center;
+            display: flex;
+            justify-content: center;
         }
 
         .btn-backspace {
@@ -126,13 +131,16 @@
             font-size: 14px;
             font-align: center;
             background-color: #2f4f4f; /* Dark Gray */
-            min-width: 55px;
+            min-width: 35px;
             /* no internal padding */
             padding: 0;
             line-height: 14px;
             /* bold text */
             font-weight: bold;
             color: #3e6969;
+            align-items: center;
+            display: flex;
+            justify-content: center;
         }
 
         #toast {
@@ -249,6 +257,21 @@
             text-align: center;
             font-family: "arial";
         }
+        .counter {
+    position: absolute;
+    top: -25%;
+    right: -25%;
+    border: 1px solid black;
+    width: 50%;
+    height: 50%;
+    z-index: 100;
+    background-color: #3e6969;
+            border-radius: 2px;
+            justify-content: center;
+    align-items: center;
+            display: flex;
+            font-size: 12px;
+}
     </style>
 </head>
 <body>
@@ -270,11 +293,44 @@
 
         </div>
     </div>
-    <div class="row justify-content-center mt-5">
-        <div class="col-12">
-            <div class="group" role="group" aria-label="Button Group" id="jumble keyboard">
-            </div>
+
+    <div class="container" id="qwerty">
+        <div class="row justify-content-center mt-5">
+            <div class="btn-unclicked btn-custom col-md" id="q"onclick="handleButtonPress(this.id)">Q<div class="counter" id="qc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="w"onclick="handleButtonPress(this.id)">W<div class="counter" id="wc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="e"onclick="handleButtonPress(this.id)">E<div class="counter" id="ec">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="r"onclick="handleButtonPress(this.id)">R<div class="counter" id="rc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="t"onclick="handleButtonPress(this.id)">T<div class="counter" id="tc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="y"onclick="handleButtonPress(this.id)">Y<div class="counter" id="yc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="u"onclick="handleButtonPress(this.id)">U<div class="counter" id="uc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="i"onclick="handleButtonPress(this.id)">I<div class="counter" id="ic">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="o"onclick="handleButtonPress(this.id)">O<div class="counter" id="oc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="p"onclick="handleButtonPress(this.id)">P<div class="counter" id="pc">1</div></div>
         </div>
+        <div class="row justify-content-center mt-2">
+            <div class="btn-unclicked btn-custom col-md" id="a"onclick="handleButtonPress(this.id)">A<div class="counter" id="ac">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="s"onclick="handleButtonPress(this.id)">S<div class="counter" id="sc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="d"onclick="handleButtonPress(this.id)">D<div class="counter" id="dc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="f"onclick="handleButtonPress(this.id)">F<div class="counter" id="fc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="g"onclick="handleButtonPress(this.id)">G<div class="counter" id="gc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="h"onclick="handleButtonPress(this.id)">H<div class="counter" id="hc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="j"onclick="handleButtonPress(this.id)">J<div class="counter" id="jc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="k"onclick="handleButtonPress(this.id)">K<div class="counter" id="kc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="l"onclick="handleButtonPress(this.id)">L<div class="counter" id="lc">1</div></div>
+        </div>
+        <div class="row justify-content-center mt-2">
+            <div class="btn-submit btn-custom" id="reset" onclick="handleButtonPress(this.id)">Reset</div>
+            <div class="btn-unclicked btn-custom col-md" id="z"onclick="handleButtonPress(this.id)">Z<div class="counter" id="zc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="x"onclick="handleButtonPress(this.id)">X<div class="counter" id="xc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="c"onclick="handleButtonPress(this.id)">C<div class="counter" id="cc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="v"onclick="handleButtonPress(this.id)">V<div class="counter" id="vc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="b"onclick="handleButtonPress(this.id)">B<div class="counter" id="bc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="n"onclick="handleButtonPress(this.id)">N<div class="counter" id="nc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="m"onclick="handleButtonPress(this.id)">M<div class="counter" id="mc">1</div></div>
+            <div class="btn-unclicked btn-custom col-md" id="backspace" onclick="handleButtonPress(this.id)"><img src="icons/backspace.png" alt="backspace"
+                    width="90%" height="75%"></div>
+            <div class="btn-submit btn-custom" id="submit">Submit</div>
+
     </div>
     <div id="trys-container">
         <div id="trys-remaining">

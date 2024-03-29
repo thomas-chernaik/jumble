@@ -6,6 +6,7 @@ let finished = false;
 let results = "";
 let todaysDay = 0;
 let guesses = [];
+let remainingLetters = {};
 
 //get the json data from the file (jumble.json)
 fetch('jumble.json')
@@ -15,6 +16,7 @@ fetch('jumble.json')
         console.log(words);
         loadStuff(words);
         loadGuesses();
+        updateKeyboard();
 
     });
 
@@ -101,35 +103,7 @@ function createJumbledElement(jumbled) {
             currentGuess += "_";
         }
     }
-    //create the buttons for each letter
-    let jumbledArray = jumbled.split("");
-    let jumbledElement = document.getElementById("jumble keyboard");
-    for (let i = 0; i < jumbledArray.length; i++) {
-        //                <button type="button" class="btn-custom">A</button>
-        let button = document.createElement("div");
-        button.type = "button";
-        button.className = "btn-custom btn-unclicked";
-        //make the letter uppercase
-        button.innerHTML = jumbledArray[i].toUpperCase();
-        //add the event listener
-        button.onclick = buttonPressed;
 
-        jumbledElement.appendChild(button);
-    }
-    //add the submit button
-    let submitButton = document.createElement("button");
-    submitButton.type = "button";
-    submitButton.className = "btn-submit btn-custom";
-    submitButton.innerHTML = "SUBMIT";
-    submitButton.onclick = submitPressed;
-    jumbledElement.appendChild(submitButton);
-    //add the backspace button
-    let backButton = document.createElement("button");
-    backButton.type = "button";
-    backButton.className = "btn-backspace btn-custom";
-    backButton.innerHTML = "RESET";
-    backButton.onclick = backspacePressed;
-    jumbledElement.appendChild(backButton);
     createInput();
 }
 
@@ -175,66 +149,23 @@ function buttonPressed(event) {
         return;
     }
 
-    // check if the parent is the keyboard
-    if (event.target.parentElement.id === "jumble keyboard") {
-        //check if the class contains btn-clicked
-        if (event.target.className.includes("btn-clicked")) {
-            //get the value of the button
-            for (let i = currentGuess.length - 1; i >= 0; i--) {
-                console.log("Checking " + currentGuess[i] + " against " + event.target.innerHTML)
-                if (currentGuess[i] === event.target.innerHTML) {
-                    currentGuess = currentGuess.substring(0, i) + "_" + currentGuess.substring(i + 1);
-                    break;
-                }
-            }
-            //switch the class to btn-unclicked
-            event.target.className = "btn-unclicked btn-custom";
-            updateGuess();
-            return;
-        }
-        console.log("keyboard button pressed" + event.target.innerHTML);
-        //add the letter to the current guess
-        let letter = event.target.innerHTML;
-        //get the current guess
+
+    if (event.target.className.includes("btn-guessed")) {
+        console.log("guessed button pressed" + event.target.innerHTML);
+        //remove the letter from the current guess
+        //work out what number child this is
+        let value = Array.prototype.indexOf.call(event.target.parentElement.children, event.target);
         let guessArray = currentGuess.split("");
-        //replace the first _ with the letter
-        for (let i = 0; i < guessArray.length; i++) {
-            if (guessArray[i] === "_") {
-                guessArray[i] = letter;
-                break;
-            }
-        }
+        let prevValue = guessArray[value];
+        guessArray[value] = "_";
         currentGuess = guessArray.join("");
-        //switch the class to btn-clicked
-        event.target.className = "btn-clicked btn-custom";
-    } else {
-        if (event.target.className.includes("btn-guessed")) {
-            console.log("guessed button pressed" + event.target.innerHTML);
-            //remove the letter from the current guess
-            //work out what number child this is
-            let value = Array.prototype.indexOf.call(event.target.parentElement.children, event.target);
-            let guessArray = currentGuess.split("");
-            let prevValue = guessArray[value];
-            guessArray[value] = "_";
-            currentGuess = guessArray.join("");
-            //switch the class to btn-unclicked
-            event.target.className = "btn-unguessed btn-custom";
-            updateGuess();
-            //search through the keyboard and find the letter
-            let keyboard = document.getElementById("jumble keyboard");
-            let keyboardChildren = keyboard.children;
-            for (let i = 0; i < keyboardChildren.length - 2; i++) {
-                console.log("Checking " + keyboardChildren[i].innerHTML + " against " + prevValue)
-                if (keyboardChildren[i].innerHTML === prevValue) {
-                    if (keyboardChildren[i].className.includes("btn-clicked")) {
-                        keyboardChildren[i].className = "btn-unclicked btn-custom";
-                        break;
-                    }
-                }
-            }
-        }
+        //switch the class to btn-unclicked
+        event.target.className = "btn-unguessed btn-custom";
+        updateGuess();
     }
+
     updateGuess();
+    updateKeyboard()
 }
 
 function updateGuess() {
@@ -253,7 +184,7 @@ function updateGuess() {
     }
 }
 
-function submitPressed(event) {
+function submitPressed() {
     if (finished) {
         return;
 
@@ -268,23 +199,36 @@ function submitPressed(event) {
     let phraseArray = phrase.split("");
     let wordsSplit = phrase.split(" ");
     let currentWord = 0;
+    let letterCounts = {};
     let isCorrect = true;
     for (let i = 0; i < guessArray.length; i++) {
         //if this is a space, skip
         if (phraseArray[i] === " ") {
             currentWord++;
+            letterCounts = {};
             continue;
         }
         console.log("Checking " + guessArray[i] + " against " + phraseArray[i] + " in word " + wordsSplit[currentWord])
         //if the letter matches, change the class to guess-correct btn-custom
         if (guessArray[i] === phraseArray[i]) {
+            letterCounts[guessArray[i]] = letterCounts[guessArray[i]] ? letterCounts[guessArray[i]] + 1 : 1;
             let guessElement = document.getElementById("jumble guess");
             guessElement.children[i].className = "guess-correct btn-custom";
         } else {
             isCorrect = false;
             if (wordsSplit[currentWord].includes(guessArray[i])) {
-                let guessElement = document.getElementById("jumble guess");
-                guessElement.children[i].className = "guess-correctWord btn-custom";
+                letterCounts[guessArray[i]] = letterCounts[guessArray[i]] ? letterCounts[guessArray[i]] + 1 : 1;
+                //check if the letter is in the word at least letterCounts[guessArray[i]] times
+                if (wordsSplit[currentWord].split(guessArray[i]).length - 1 >= letterCounts[guessArray[i]]) {
+                    //if the letter is in the word, but not enough times, change the class to guess-incorrect btn-custom
+                    let guessElement = document.getElementById("jumble guess");
+                    guessElement.children[i].className = "guess-correctWord btn-custom";
+                }
+                //if the letter is wrong, change the class to guess-incorrect btn-custom
+                else {
+                    let guessElement = document.getElementById("jumble guess");
+                    guessElement.children[i].className = "guess-incorrect btn-custom";
+                }
 
             }
             //if the letter is wrong, change the class to guess-incorrect btn-custom
@@ -339,12 +283,12 @@ function submitPressed(event) {
     }
 
     createInput();
-    backspacePressed(null);
+    resetPressed();
 
 
 }
 
-function backspacePressed(event) {
+function resetPressed() {
     if (finished) {
         return;
 
@@ -359,12 +303,7 @@ function backspacePressed(event) {
         }
     }
     updateGuess();
-    //reset the keyboard
-    let keyboard = document.getElementById("jumble keyboard");
-    let keyboardChildren = keyboard.children;
-    for (let i = 0; i < keyboardChildren.length - 2; i++) {
-        keyboardChildren[i].className = "btn-unclicked btn-custom";
-    }
+    updateKeyboard();
 }
 
 function handleKeyPress(event) {
@@ -372,54 +311,115 @@ function handleKeyPress(event) {
         return;
     }
     //get the key pressed
-    let key = event.key;
+    let key = "";
+    //if event is a string, get the key from the string
+    if(typeof event === "string"){
+        console.log(event);
+        key = event;
+    }
+    else {
+        key = event.key;
+    }
     //check if the key is a letter
     if (key.match(/[a-z]/i)) {
-        //get the keyboard
-        let keyboard = document.getElementById("jumble keyboard");
-        let keyboardChildren = keyboard.children;
-        for (let i = 0; i < keyboardChildren.length - 2; i++) {
-            if (keyboardChildren[i].innerHTML === key.toUpperCase()) {
-                if (keyboardChildren[i].className.includes("btn-unclicked")) {
-                    keyboardChildren[i].click();
-                    break;
-                }
-            }
-        }
+        key = key.toUpperCase();
+        keyPress(key);
     }
+    console.log("key pressed " + key);
     //if the key is backspace
-    if (key === "Backspace") {
+    if (key === "BACKSPACE") {
         console.log("backspace");
         //remove the last non - or _ from the current guess
         let guessArray = currentGuess.split("");
         for (let i = guessArray.length - 1; i >= 0; i--) {
             if (guessArray[i] !== "_" && guessArray[i] !== "-") {
                 guessArray[i] = "_";
-                //switch the keyboard button to unclicked
-                let keyboard = document.getElementById("jumble keyboard");
-                let keyboardChildren = keyboard.children;
-                for (let j = 0; j < keyboardChildren.length - 2; j++) {
-                    if (keyboardChildren[j].innerHTML === phrase[i]) {
-                        if (keyboardChildren[j].className.includes("btn-clicked")) {
-                            keyboardChildren[j].className = "btn-unclicked btn-custom";
-                            break;
-                        }
-                    }
-                }
 
                 break;
             }
         }
         currentGuess = guessArray.join("");
+        updateKeyboard();
 
     }
     updateGuess();
     //if the key is enter
-    if (key === "Enter") {
-        let submitButton = document.querySelector(".btn-submit");
-        submitButton.click();
+    if (key === "ENTER" || key === "SUBMIT") {
+        submitPressed();
+    }
+    if(key == "RESET")
+    {
+        resetPressed();
     }
 }
+function handleButtonPress(key) {
+    //get the div that was clicked
+    handleKeyPress(key.toUpperCase());
+}
+
+function updateLetterCounts() {
+    //get the remaining letter counts
+    remainingLetters = {};
+    //add the letter counts for the phrase
+    let phraseArray = phrase.split("");
+    for (let i = 0; i < phraseArray.length; i++) {
+        if (phraseArray[i] === " ") {
+            continue;
+        }
+        remainingLetters[phraseArray[i]] = remainingLetters[phraseArray[i]] ? remainingLetters[phraseArray[i]] + 1 : 1;
+    }
+    //subtract the letter counts for the current guess
+    let guessArray = currentGuess.split("");
+    for (let i = 0; i < guessArray.length; i++) {
+        if (guessArray[i] === "_") {
+            continue;
+        }
+        remainingLetters[guessArray[i]] = remainingLetters[guessArray[i]] ? remainingLetters[guessArray[i]] - 1 : -1;
+    }
+}
+
+function keyPress(key) {
+    updateLetterCounts();
+    //if the letter is not in the remaining letters, return
+    if (!remainingLetters.hasOwnProperty(key)) {
+        return;
+    }
+    if (remainingLetters[key] === 0) {
+        return;
+    }
+    //if we are here we can add the key to the current guess
+    let guessArray = currentGuess.split("");
+    for (let i = 0; i < guessArray.length; i++) {
+        if (guessArray[i] === "_") {
+            guessArray[i] = key;
+            break;
+        }
+    }
+    currentGuess = guessArray.join("");
+    updateKeyboard();
+}
+
+function updateKeyboard() {
+    updateLetterCounts();
+    //get the keys
+    let alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+    //loop through the keys
+    for (let i = 0; i < alphabet.length; i++) {
+        let key = document.getElementById(alphabet[i]);
+        //if the letter is in the letter counts, set the class to btn-unclicked
+        if (remainingLetters[alphabet[i].toUpperCase()] > 0) {
+            key.className = "btn-unclicked btn-custom";
+        } else {
+            key.className = "btn-clicked btn-custom";
+        }
+        //get the counter for this letter
+        let counter = document.getElementById(alphabet[i] + "c");
+        //set the counter to the letter count
+        counter.innerHTML = remainingLetters[alphabet[i].toUpperCase()] > 0 ? remainingLetters[alphabet[i].toUpperCase()] : 0;
+
+    }
+}
+
 
 function generateResults(plaintext) {
     let fullResults = "Jumble " + todaysDay
@@ -434,21 +434,34 @@ function generateResults(plaintext) {
         let phraseArray = phrase.split("");
         let wordsSplit = phrase.split(" ");
         let currentWord = 0;
+        //dictionary of letter counts
+        let letterCounts = {};
         for (let j = 0; j < guessArray.length; j++) {
             //if this is a space, skip
             if (phraseArray[j] === " ") {
                 currentWord++;
                 results += "- ";
+                letterCounts = {};
                 continue;
             }
             //if the letter matches, change the class to guess-correct btn-custom
             if (guessArray[j] === phraseArray[j]) {
+                letterCounts[guessArray[j]] = letterCounts[guessArray[j]] ? letterCounts[guessArray[j]] + 1 : 1;
 
                 //green circle emoji
                 results += "🟢 "
             } else {
                 if (wordsSplit[currentWord].includes(guessArray[j])) {
-                    results += "🟡 "
+                    letterCounts[guessArray[j]] = letterCounts[guessArray[j]] ? letterCounts[guessArray[j]] + 1 : 1;
+                    //check if the letter is in the word at least letterCounts[guessArray[j]] times
+                    if (wordsSplit[currentWord].split(guessArray[j]).length - 1 >= letterCounts[guessArray[j]]) {
+                        //yellow circle emoji
+                        results += "🟡 "
+                    }
+                    //if the letter is in the word, but not enough times, change the class to guess-incorrect btn-custom
+                    else {
+                        results += "🔵 ";
+                    }
                 }
                 //if the letter is wrong, change the class to guess-incorrect btn-custom
                 else {
@@ -500,7 +513,7 @@ function loadGuesses() {
             currentGuess = guess;
             //update the text for the guess
             updateGuess();
-            submitPressed(null);
+            submitPressed();
         }
         guesses = tempGuesses;
     }
