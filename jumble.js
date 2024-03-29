@@ -424,7 +424,7 @@ function updateKeyboard() {
 function generateResults(plaintext) {
     let fullResults = "Jumble " + todaysDay
     fullResults += "<br>";
-    fullResults += "Theme: " + words[todaysDay].context;
+    fullResults += "Clue: " + words[todaysDay].context;
     console.log(fullResults);
     results = "";
     //construct the results from the guesses
