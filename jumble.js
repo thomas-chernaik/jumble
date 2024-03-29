@@ -201,6 +201,14 @@ function submitPressed() {
     let currentWord = 0;
     let letterCounts = {};
     let isCorrect = true;
+    //do the correct letters first
+    for(let i = 0; i < guessArray.length; i++){
+        if(guessArray[i] === phraseArray[i]){
+            letterCounts[guessArray[i]] = letterCounts[guessArray[i]] ? letterCounts[guessArray[i]] + 1 : 1;
+            let guessElement = document.getElementById("jumble guess");
+            guessElement.children[i].className = "guess-correct btn-custom";
+        }
+    }
     for (let i = 0; i < guessArray.length; i++) {
         //if this is a space, skip
         if (phraseArray[i] === " ") {
@@ -211,9 +219,7 @@ function submitPressed() {
         console.log("Checking " + guessArray[i] + " against " + phraseArray[i] + " in word " + wordsSplit[currentWord])
         //if the letter matches, change the class to guess-correct btn-custom
         if (guessArray[i] === phraseArray[i]) {
-            letterCounts[guessArray[i]] = letterCounts[guessArray[i]] ? letterCounts[guessArray[i]] + 1 : 1;
-            let guessElement = document.getElementById("jumble guess");
-            guessElement.children[i].className = "guess-correct btn-custom";
+            continue;
         } else {
             isCorrect = false;
             if (wordsSplit[currentWord].includes(guessArray[i])) {
