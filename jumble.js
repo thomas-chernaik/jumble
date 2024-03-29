@@ -78,7 +78,7 @@ function loadStuff(words) {
     }
     console.log(diff);
     console.log(words[diff]);
-    let theme = words[diff].theme;
+    let theme = words[diff].context;
     phrase = words[diff].phrase;
     //uppercase phrase
     phrase = phrase.toUpperCase();
@@ -424,7 +424,7 @@ function updateKeyboard() {
 function generateResults(plaintext) {
     let fullResults = "Jumble " + todaysDay
     fullResults += "<br>";
-    fullResults += "Theme: " + words[todaysDay].theme;
+    fullResults += "Theme: " + words[todaysDay].context;
     console.log(fullResults);
     results = "";
     //construct the results from the guesses
@@ -490,7 +490,7 @@ function storeGuesses() {
     //store the guesses in local storage, set to expire at midnight
     let date = new Date();
     let midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
-    let expiry = midnight.getTime();
+    let expiry = todaysDay;
     //store the guesses
     localStorage.setItem("guesses", JSON.stringify(guesses));
     localStorage.setItem("expiry", expiry);
@@ -500,7 +500,7 @@ function loadGuesses() {
     //load the guesses from local storage
     let date = new Date();
     let expiry = localStorage.getItem("expiry");
-    if (expiry < date.getTime()) {
+    if (expiry != todaysDay) {
         //clear the guesses
         guesses = [];
         storeGuesses();
