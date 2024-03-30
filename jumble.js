@@ -23,7 +23,7 @@ fetch('jumble.json')
 
     });
 
-function generateArchiveLinks(){
+function generateArchiveLinks() {
     //get the current day
     daysAfter2024();
 
@@ -33,8 +33,7 @@ function generateArchiveLinks(){
     let row = document.createElement("div");
     row.className = "row";
     let count = 0;
-    for(let i = 0; i < todaysDay; i++)
-    {
+    for (let i = 0; i < todaysDay; i++) {
         let col = document.createElement("div");
         col.className = "col";
         let link = document.createElement("a");
@@ -44,8 +43,7 @@ function generateArchiveLinks(){
         col.appendChild(link);
         row.appendChild(col);
         count++;
-        if(count == 3)
-        {
+        if (count == 3) {
             archiveLinks.appendChild(row);
             row = document.createElement("div");
             row.className = "row";
@@ -115,9 +113,8 @@ function jumble(word, seed) {
 function loadStuff(words) {
     //get the day
     let diff = daysAfter2024();
-    if(playingArchive)
-    {
-        let options = { year: 'numeric', month: 'long', day: 'numeric' };
+    if (playingArchive) {
+        let options = {year: 'numeric', month: 'long', day: 'numeric'};
         document.getElementById("archive").innerHTML = "Playing archive game from " + archiveDate.toLocaleDateString('default', options);
     }
     //get the word of the day
@@ -235,7 +232,7 @@ function updateGuess() {
     let currentword = 0;
     for (let i = 0; i < guessArray.length; i++) {
         if (guessArray[i] === "-") {
-            currentword+=2;
+            currentword += 2;
             wordindex = 0;
             continue;
         }
@@ -283,7 +280,7 @@ function submitPressed() {
             if (guessArray[j + wordOffset] === wordsSplit[i][j]) {
                 letterHistogram[guessArray[j + wordOffset]]--;
                 let guessElement = document.getElementById("jumble guess");
-                guessElement.children[i*2].children[j].className = "guess-correct btn-custom";
+                guessElement.children[i * 2].children[j].className = "guess-correct btn-custom";
             }
         }
         //look for correct letters in the wrong place
@@ -297,10 +294,10 @@ function submitPressed() {
             if (letterHistogram[guessArray[j + wordOffset]] > 0) {
                 letterHistogram[guessArray[j + wordOffset]]--;
                 let guessElement = document.getElementById("jumble guess");
-                guessElement.children[i*2].children[j].className = "guess-correctWord btn-custom";
+                guessElement.children[i * 2].children[j].className = "guess-correctWord btn-custom";
             } else {
                 let guessElement = document.getElementById("jumble guess");
-                guessElement.children[i*2].children[j].className = "guess-incorrect btn-custom";
+                guessElement.children[i * 2].children[j].className = "guess-incorrect btn-custom";
             }
         }
     }
@@ -486,7 +483,7 @@ function updateKeyboard() {
 
 
 function generateResults(plaintext) {
-    let fullResults = "Jumble " + todaysDay
+    let fullResults = "Jumble " + todaysDay + " " + guesses.length + "/6";
     fullResults += "<br>";
     fullResults += "Clue: " + words[todaysDay].context;
     console.log(fullResults);
@@ -497,42 +494,46 @@ function generateResults(plaintext) {
         let guessArray = guess.split("");
         let phraseArray = phrase.split("");
         let wordsSplit = phrase.split(" ");
-        let currentWord = 0;
-        //dictionary of letter counts
-        let letterCounts = {};
-        for (let j = 0; j < guessArray.length; j++) {
-            //if this is a space, skip
-            if (phraseArray[j] === " ") {
-                currentWord++;
-                results += "- ";
-                letterCounts = {};
-                continue;
-            }
-            //if the letter matches, change the class to guess-correct btn-custom
-            if (guessArray[j] === phraseArray[j]) {
-                letterCounts[guessArray[j]] = letterCounts[guessArray[j]] ? letterCounts[guessArray[j]] + 1 : 1;
 
-                //green circle emoji
-                results += "🟢 "
-            } else {
-                if (wordsSplit[currentWord].includes(guessArray[j])) {
-                    letterCounts[guessArray[j]] = letterCounts[guessArray[j]] ? letterCounts[guessArray[j]] + 1 : 1;
-                    //check if the letter is in the word at least letterCounts[guessArray[j]] times
-                    if (wordsSplit[currentWord].split(guessArray[j]).length - 1 >= letterCounts[guessArray[j]]) {
-                        //yellow circle emoji
-                        results += "🟡 "
-                    }
-                    //if the letter is in the word, but not enough times, change the class to guess-incorrect btn-custom
-                    else {
-                        results += "🔵 ";
-                    }
+        //for each word in the phrase
+        for (let i = 0; i < wordsSplit.length; i++) {
+
+            //calculate the word offset (sum of the lengths of the previous words)
+            let wordOffset = 0;
+            for (let j = 0; j < i; j++) {
+                wordOffset += wordsSplit[j].length;
+                wordOffset++;
+            }
+            //create a letter histogram for the word
+            let letterHistogram = {};
+            for (let j = 0; j < wordsSplit[i].length; j++) {
+                letterHistogram[wordsSplit[i][j]] = letterHistogram[wordsSplit[i][j]] ? letterHistogram[wordsSplit[i][j]] + 1 : 1;
+            }
+            //look for correct letters
+            for (let j = 0; j < wordsSplit[i].length; j++) {
+                if (guessArray[j + wordOffset] === wordsSplit[i][j]) {
+                    letterHistogram[guessArray[j + wordOffset]]--;
+                    results += "🟢 ";
                 }
-                //if the letter is wrong, change the class to guess-incorrect btn-custom
-                else {
+            }
+            //look for correct letters in the wrong place
+            for (let j = 0; j < wordsSplit[i].length; j++) {
+                if (guessArray[j + wordOffset] === wordsSplit[i][j]) {
+                    continue;
+                }
+                if (letterHistogram[guessArray[j + wordOffset]] > 0) {
+                    letterHistogram[guessArray[j + wordOffset]]--;
+                    //yellow circle emoji
+                    results += "🟡 ";
+                } else {
+                    //blue circle emoji
                     results += "🔵 ";
                 }
             }
+            results += "- ";
         }
+        //remove the last -
+        results = results.slice(0, -3);
         results += "<br>";
     }
     console.log(results);
@@ -551,8 +552,7 @@ document.addEventListener("keydown", handleKeyPress);
 
 
 function storeGuesses() {
-    if(playingArchive)
-    {
+    if (playingArchive) {
         return;
     }
     //store the guesses in local storage, set to expire at midnight
@@ -565,8 +565,7 @@ function storeGuesses() {
 }
 
 function loadGuesses() {
-    if(playingArchive)
-    {
+    if (playingArchive) {
         return;
     }
     //load the guesses from local storage

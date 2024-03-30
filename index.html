@@ -23,7 +23,7 @@
         /* Centered Element */
         #theme-container {
             text-align: center;
-            margin-top: 50px;
+            margin-top: 30px;
         }
 
         #trys-container {
@@ -264,8 +264,9 @@
             text-align: center;
             font-family: "arial";
         }
-        #archiveButton{
-             position: fixed;
+
+        #archiveButton {
+            position: fixed;
             top: 10px;
             left: 10px;
             width: 90px;
@@ -294,7 +295,8 @@
             display: flex;
             font-size: 12px;
         }
-        .archive-card{
+
+        .archive-card {
             min-height: 50px;
             margin-top: 10px;
             background-color: midnightblue;
@@ -306,8 +308,9 @@
             cursor: pointer;
             display: flex;
         }
-        .scroll-container{
-            width:100%;
+
+        .scroll-container {
+            width: 100%;
             height: 500px;
             overflow-y: scroll;
             overflow-x: hidden;
@@ -323,6 +326,7 @@
         <h1 onclick="window.location.href='/jumble';">Jumble</h1>
         <h5 id="archive"></h5>
     </div>
+    <hr>
     <div id="theme-container">
         <span id="theme-text">Today's clue is:</span>
         <div id="theme">
@@ -466,7 +470,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="lostTitle">You failed to solve todays modal</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close  btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <img src="icons/cry.gif" alt="emoji disappearing into dust" class="img-fluid">
@@ -488,25 +492,23 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="helpTitle">How to play</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close  btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div id="help-text">
+                            <h3>
+                                Use the clue to unscramble the phrase and solve the Jumble!
+                            </h3>
+                            <hr>
                             <h4>
-
-                                The aim of the game is to solve the jumble by rearranging the letters to form the
-                                correct
-                                word.
-                                <br>
-                                <br>
-                                You will recieve 6 attempts to solve the jumble, and recieve feedback on each attempt.
+                                You have six attempts, given feedback after each.
                                 <br>
                                 <br>
                                 A correct letter will be highlighted in light blue, a letter in the correct word but in
                                 the
                                 wrong position will be highlighted in yellow, and an incorrect letter will be
                                 highlighted in
-                                red.
+                                black.
                                 <br>
                                 <br>
                                 Good luck!
@@ -525,13 +527,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="helpTitle">How to play</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close  btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div id="archive-text" class="scroll-container">
                             <h4>
-                                Choose an archive game to play.
+                                Choose an archive game to play:
                             </h4>
+                            <hr>
                             <div id="archive-links">
                             </div>
                         </div>
@@ -546,7 +549,7 @@
     </div>
 </div>
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
