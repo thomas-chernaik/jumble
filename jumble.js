@@ -608,9 +608,10 @@ window.onload = function () {
                 }, 3000);
                 return;
             }
+            let res = generateResults(true);
             await navigator.share({
                 title: 'Jumble',
-                text: generateResults(true),
+                text: res,
             });
             console.log('Data was shared successfully');
         } catch (err) {
@@ -632,9 +633,10 @@ window.onload = function () {
                 }, 3000);
                 return;
             }
+            let res = generateResults(true);
             await navigator.share({
                 title: 'Jumble',
-                text: generateResults(true),
+                text: res,
             });
             console.log('Data was shared successfully');
         } catch (err) {
