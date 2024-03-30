@@ -7,6 +7,8 @@ let results = "";
 let todaysDay = 0;
 let guesses = [];
 let remainingLetters = {};
+let playingArchive = false;
+let archiveDate = Date.now();
 
 //get the json data from the file (jumble.json)
 fetch('jumble.json')
@@ -17,16 +19,59 @@ fetch('jumble.json')
         loadStuff(words);
         loadGuesses();
         updateKeyboard();
+        generateArchiveLinks();
 
     });
 
+function generateArchiveLinks(){
+    //get the current day
+    daysAfter2024();
+
+    let archiveText = document.getElementById("archive-text");
+    let archiveLinks = document.getElementById("archive-links");
+    //make it a bootstrap 3xn grid, styled as cards
+    let row = document.createElement("div");
+    row.className = "row";
+    let count = 0;
+    for(let i = 0; i < todaysDay; i++)
+    {
+        let col = document.createElement("div");
+        col.className = "col";
+        let link = document.createElement("a");
+        link.href = "index.html?archive=" + i;
+        link.className = "card archive-card";
+        link.innerHTML = "Archive day " + i;
+        col.appendChild(link);
+        row.appendChild(col);
+        count++;
+        if(count == 3)
+        {
+            archiveLinks.appendChild(row);
+            row = document.createElement("div");
+            row.className = "row";
+            count = 0;
+        }
+    }
+}
+
 function daysAfter2024() {
+    //check and see if we are playing an archive game from the url parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const archive = urlParams.get('archive');
+
     const now = new Date();
     const start = new Date(2024, 2, 27); // Note: JavaScript counts months from 0
     const diff = now - start;
     const oneDay = 1000 * 60 * 60 * 24;
     const days = Math.floor(diff / oneDay);
     todaysDay = days;
+    if (archive) {
+        playingArchive = true;
+        archiveDate = new Date(start);
+        archiveDate.setDate(archiveDate.getDate() + archive);
+
+        return archive;
+    }
     return days;
 }
 
@@ -70,6 +115,11 @@ function jumble(word, seed) {
 function loadStuff(words) {
     //get the day
     let diff = daysAfter2024();
+    if(playingArchive)
+    {
+        let options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("archive").innerHTML = "Playing archive game from " + archiveDate.toLocaleDateString('default', options);
+    }
     //get the word of the day
     if (diff > words.length) {
         // output an error message
@@ -505,6 +555,10 @@ document.addEventListener("keydown", handleKeyPress);
 
 
 function storeGuesses() {
+    if(playingArchive)
+    {
+        return;
+    }
     //store the guesses in local storage, set to expire at midnight
     let date = new Date();
     let midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
@@ -515,6 +569,10 @@ function storeGuesses() {
 }
 
 function loadGuesses() {
+    if(playingArchive)
+    {
+        return;
+    }
     //load the guesses from local storage
     let date = new Date();
     let expiry = localStorage.getItem("expiry");

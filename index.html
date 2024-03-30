@@ -263,6 +263,19 @@
             text-align: center;
             font-family: "arial";
         }
+        #archiveButton{
+             position: fixed;
+            top: 10px;
+            left: 10px;
+            width: 90px;
+            height: 50px;
+            border: 2px solid wheat;
+            border-radius: 15%;
+            background-color: transparent;
+            color: wheat;
+            font-size: 24px;
+            text-align: center;
+        }
 
 
         .counter {
@@ -280,14 +293,34 @@
             display: flex;
             font-size: 12px;
         }
+        .archive-card{
+            min-height: 50px;
+            margin-top: 10px;
+            background-color: midnightblue;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+        }
+        .scroll-container{
+            width:100%;
+            height: 500px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <button id="helpButton" data-bs-toggle="modal" data-bs-target="#helpModal">?</button>
+    <button id="archiveButton" data-bs-toggle="modal" data-bs-target="#archiveModal">Archive</button>
     <div id="title" class="text-center mt-5">
-        <h1>Jumble</h1>
+        <h1 onclick="window.location.href='/jumble';">Jumble</h1>
+        <h5 id="archive"></h5>
     </div>
     <div id="theme-container">
         <span id="theme-text">Today's clue is:</span>
@@ -477,6 +510,29 @@
                                 <br>
                                 Good luck!
                             </h4>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="helpTitle">How to play</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="archive-text" class="scroll-container">
+                            <h4>
+                                Choose an archive game to play.
+                            </h4>
+                            <div id="archive-links">
+                            </div>
                         </div>
 
                     </div>
