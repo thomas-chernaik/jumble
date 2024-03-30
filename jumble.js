@@ -121,6 +121,10 @@ function createInput() {
     guessElement.ariaLabel = "Button Group";
     guessElement.id = "jumble guess";
     guessGroup.appendChild(guessElement);
+    let wordElement = document.createElement("div");
+    wordElement.className = "group";
+    wordElement.role = "group";
+    wordElement.ariaLabel = "Button Group";
     for (let i = 0; i < phraseArray.length; i++) {
         //if this is not a space, add a button
         if (phraseArray[i] !== " ") {
@@ -131,17 +135,23 @@ function createInput() {
             button.innerHTML = "_";
             //add the event listener
             button.onclick = buttonPressed;
-            guessElement.appendChild(button);
+            wordElement.appendChild(button);
 
         }
         //if this is a space, add a -
         else {
+            guessElement.appendChild(wordElement);
+            wordElement = document.createElement("div");
+            wordElement.className = "group";
+            wordElement.role = "group";
+            wordElement.ariaLabel = "Button Group";
             let dash = document.createElement("div");
             dash.className = "dash";
             dash.innerHTML = "-";
             guessElement.appendChild(dash);
         }
     }
+    guessElement.appendChild(wordElement);
 }
 
 function buttonPressed(event) {
@@ -171,16 +181,21 @@ function buttonPressed(event) {
 function updateGuess() {
     let guessElement = document.getElementById("jumble guess");
     let guessArray = currentGuess.split("");
+    let wordindex = 0;
+    let currentword = 0;
     for (let i = 0; i < guessArray.length; i++) {
         if (guessArray[i] === "-") {
+            currentword+=2;
+            wordindex = 0;
             continue;
         }
-        guessElement.children[i].innerHTML = guessArray[i];
+        guessElement.children[currentword].children[wordindex].innerHTML = guessArray[i];
         if (guessArray[i] === "_") {
-            guessElement.children[i].className = "btn-unguessed btn-custom";
+            guessElement.children[currentword].children[wordindex].className = "btn-unguessed btn-custom";
         } else {
-            guessElement.children[i].className = "btn-guessed btn-custom";
+            guessElement.children[currentword].children[wordindex].className = "btn-guessed btn-custom";
         }
+        wordindex++;
     }
 }
 
@@ -189,7 +204,6 @@ function submitPressed() {
         return;
 
     }
-    let guessString = "";
     //go through each letter in the current guess
     let guessArray = currentGuess.split("");
     //if there are any _ in the guess, return
@@ -198,52 +212,51 @@ function submitPressed() {
     }
     let phraseArray = phrase.split("");
     let wordsSplit = phrase.split(" ");
+
+    console.log(wordsSplit);
     let currentWord = 0;
     let letterCounts = {};
     let isCorrect = true;
-    //do the correct letters first
-    for(let i = 0; i < guessArray.length; i++){
-        if(guessArray[i] === phraseArray[i]){
-            letterCounts[guessArray[i]] = letterCounts[guessArray[i]] ? letterCounts[guessArray[i]] + 1 : 1;
-            let guessElement = document.getElementById("jumble guess");
-            guessElement.children[i].className = "guess-correct btn-custom";
+    //for each word in the phrase
+    for (let i = 0; i < wordsSplit.length; i++) {
+        console.log(wordsSplit[i]);
+        //calculate the word offset (sum of the lengths of the previous words)
+        let wordOffset = 0;
+        for (let j = 0; j < i; j++) {
+            wordOffset += wordsSplit[j].length;
+            wordOffset++;
         }
-    }
-    for (let i = 0; i < guessArray.length; i++) {
-        //if this is a space, skip
-        if (phraseArray[i] === " ") {
-            currentWord++;
-            letterCounts = {};
-            continue;
-        }
-        console.log("Checking " + guessArray[i] + " against " + phraseArray[i] + " in word " + wordsSplit[currentWord])
-        //if the letter matches, change the class to guess-correct btn-custom
-        if (guessArray[i] === phraseArray[i]) {
-            continue;
-        } else {
-            isCorrect = false;
-            if (wordsSplit[currentWord].includes(guessArray[i])) {
-                letterCounts[guessArray[i]] = letterCounts[guessArray[i]] ? letterCounts[guessArray[i]] + 1 : 1;
-                //check if the letter is in the word at least letterCounts[guessArray[i]] times
-                if (wordsSplit[currentWord].split(guessArray[i]).length - 1 >= letterCounts[guessArray[i]]) {
-                    //if the letter is in the word, but not enough times, change the class to guess-incorrect btn-custom
-                    let guessElement = document.getElementById("jumble guess");
-                    guessElement.children[i].className = "guess-correctWord btn-custom";
-                }
-                //if the letter is wrong, change the class to guess-incorrect btn-custom
-                else {
-                    let guessElement = document.getElementById("jumble guess");
-                    guessElement.children[i].className = "guess-incorrect btn-custom";
-                }
-
+        //create a letter histogram for the word
+        let letterHistogram = {};
+        for (let j = 1; j < wordsSplit[i].length; j++) {
+            if (wordsSplit[i][j] === " ") {
+                continue;
             }
-            //if the letter is wrong, change the class to guess-incorrect btn-custom
-            else {
+            letterHistogram[wordsSplit[i][j]] = letterHistogram[wordsSplit[i][j]] ? letterHistogram[wordsSplit[i][j]] + 1 : 1;
+        }
+        //look for correct letters
+        for (let j = 0; j < wordsSplit[i].length; j++) {
+            if (guessArray[j + wordOffset] === wordsSplit[i][j]) {
+                letterHistogram[guessArray[j + wordOffset]]--;
                 let guessElement = document.getElementById("jumble guess");
-                guessElement.children[i].className = "guess-incorrect btn-custom";
+                guessElement.children[i*2].children[j].className = "guess-correct btn-custom";
             }
         }
-        results += guessString + "\n";
+        //look for correct letters in the wrong place
+        for (let j = 0; j < wordsSplit[i].length; j++) {
+            if (guessArray[j + wordOffset] === wordsSplit[i][j]) {
+                continue;
+            }
+            isCorrect = false;
+            if (letterHistogram[guessArray[j + wordOffset]] > 0) {
+                letterHistogram[guessArray[j + wordOffset]]--;
+                let guessElement = document.getElementById("jumble guess");
+                guessElement.children[i*2].children[j].className = "guess-correctWord btn-custom";
+            } else {
+                let guessElement = document.getElementById("jumble guess");
+                guessElement.children[i*2].children[j].className = "guess-incorrect btn-custom";
+            }
+        }
     }
 
     //rename the jumble guess to jumble guessed
@@ -319,11 +332,10 @@ function handleKeyPress(event) {
     //get the key pressed
     let key = "";
     //if event is a string, get the key from the string
-    if(typeof event === "string"){
+    if (typeof event === "string") {
         console.log(event);
         key = event;
-    }
-    else {
+    } else {
         key = event.key;
     }
     //check if the key is a letter
@@ -353,11 +365,11 @@ function handleKeyPress(event) {
     if (key === "ENTER" || key === "SUBMIT") {
         submitPressed();
     }
-    if(key == "RESET")
-    {
+    if (key == "RESET") {
         resetPressed();
     }
 }
+
 function handleButtonPress(key) {
     //get the div that was clicked
     handleKeyPress(key.toUpperCase());
