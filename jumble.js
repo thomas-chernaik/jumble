@@ -260,12 +260,9 @@ function submitPressed() {
     if (guessArray.includes("_")) {
         return;
     }
-    let phraseArray = phrase.split("");
     let wordsSplit = phrase.split(" ");
 
     console.log(wordsSplit);
-    let currentWord = 0;
-    let letterCounts = {};
     let isCorrect = true;
     //for each word in the phrase
     for (let i = 0; i < wordsSplit.length; i++) {
@@ -278,10 +275,7 @@ function submitPressed() {
         }
         //create a letter histogram for the word
         let letterHistogram = {};
-        for (let j = 1; j < wordsSplit[i].length; j++) {
-            if (wordsSplit[i][j] === " ") {
-                continue;
-            }
+        for (let j = 0; j < wordsSplit[i].length; j++) {
             letterHistogram[wordsSplit[i][j]] = letterHistogram[wordsSplit[i][j]] ? letterHistogram[wordsSplit[i][j]] + 1 : 1;
         }
         //look for correct letters
@@ -298,6 +292,8 @@ function submitPressed() {
                 continue;
             }
             isCorrect = false;
+            console.log("guessArray[j + wordOffset] " + guessArray[j + wordOffset]);
+            console.log("letterHistogram[guessArray[j + wordOffset]] " + letterHistogram[guessArray[j + wordOffset]])
             if (letterHistogram[guessArray[j + wordOffset]] > 0) {
                 letterHistogram[guessArray[j + wordOffset]]--;
                 let guessElement = document.getElementById("jumble guess");
