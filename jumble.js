@@ -483,9 +483,10 @@ function updateKeyboard() {
 
 
 function generateResults(plaintext) {
-    let fullResults = "Jumble " + todaysDay + " " + guesses.length + "/6";
+    let today = daysAfter2024();
+    let fullResults = "Jumble " + today + " " + guesses.length + "/6";
     fullResults += "<br>";
-    fullResults += "Clue: " + words[todaysDay].context;
+    fullResults += "Clue: " + words[today].context;
     console.log(fullResults);
     results = "";
     //construct the results from the guesses
