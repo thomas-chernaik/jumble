@@ -490,11 +490,19 @@ function generateResults(plaintext) {
     console.log(fullResults);
     results = "";
     //construct the results from the guesses
-    for (let i = 0; i < guesses.length; i++) {
-        let guess = guesses[i];
+    for (let k = 0; k < guesses.length; k++) {
+        let guess = guesses[k];
+        console.log(guess);
         let guessArray = guess.split("");
-        let phraseArray = phrase.split("");
         let wordsSplit = phrase.split(" ");
+        let resultsArray = [];
+        for(let i = 0; i < guessArray.length; i++) {
+            if (guessArray[i] === "-") {
+                resultsArray.push("-");
+            } else {
+                resultsArray.push("_");
+            }
+        }
 
         //for each word in the phrase
         for (let i = 0; i < wordsSplit.length; i++) {
@@ -514,7 +522,9 @@ function generateResults(plaintext) {
             for (let j = 0; j < wordsSplit[i].length; j++) {
                 if (guessArray[j + wordOffset] === wordsSplit[i][j]) {
                     letterHistogram[guessArray[j + wordOffset]]--;
-                    results += "🟢 ";
+                    console.log("correct letter " + guessArray[j + wordOffset]);
+                    //replace the _ with the emoji
+                    resultsArray[j + wordOffset] = "🟢";
                 }
             }
             //look for correct letters in the wrong place
@@ -525,16 +535,19 @@ function generateResults(plaintext) {
                 if (letterHistogram[guessArray[j + wordOffset]] > 0) {
                     letterHistogram[guessArray[j + wordOffset]]--;
                     //yellow circle emoji
-                    results += "🟡 ";
+                    resultsArray[j + wordOffset] = "🟡";
                 } else {
                     //blue circle emoji
-                    results += "🔵 ";
+                    resultsArray[j + wordOffset] = "🔵";
                 }
             }
-            results += "- ";
         }
-        //remove the last -
-        results = results.slice(0, -3);
+        //add the results to the results string
+        for (let i = 0; i < resultsArray.length; i++) {
+            results += resultsArray[i];
+            console.log(resultsArray[i]);
+            console.log(results);
+        }
         results += "<br>";
     }
     console.log(results);
