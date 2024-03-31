@@ -626,6 +626,7 @@ window.onload = function () {
             await navigator.share({
                 title: 'Jumble',
                 text: res,
+                url: "https://thomas-chernaik.github.io/jumble/",
             });
             console.log('Data was shared successfully');
         } catch (err) {
@@ -651,6 +652,7 @@ window.onload = function () {
             await navigator.share({
                 title: 'Jumble',
                 text: res,
+                url: "https://thomas-chernaik.github.io/jumble/",
             });
             console.log('Data was shared successfully');
         } catch (err) {
