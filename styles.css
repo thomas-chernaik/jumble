@@ -1,0 +1,302 @@
+ body {
+            background-color: #191970; /* Midnight Blue */
+            color: #f0f0f0; /* Light Text */
+            font-family: 'Protest Strike', sans-serif;
+
+        }
+
+        /* Centered Element */
+        #theme-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #trys-container {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 30px;
+            color: #e3c1c1;
+        }
+
+        #theme {
+            background-color: #2f4f4f; /* Dark Gray */
+            padding: 10px 20px; /* Padding for theme */
+            display: inline-block; /* To align with Today's theme text */
+            border-radius: 3px;
+        }
+
+
+        /* Adjusting button size and styling */
+        .btn-custom {
+            user-select: none; /* Prevent text selection */
+            max-width: 40px;
+            min-width: 30px;
+            width: 5%;
+            height: 40px;
+            border-radius: 3px;
+            font-size: 1.2rem;
+            padding: 5px; /* Padding between buttons */
+            margin: 1px; /* Margin between buttons */
+            color: #f0f0f0; /* Light Text */
+            border: 1px solid #000; /* Black Border */
+            cursor: pointer;
+            text-align: center;
+            font-family: 'Futura', sans-serif;
+        }
+
+        .btn-unclicked {
+            background-color: #467070; /* Dark Gray */
+
+            position: relative;
+        }
+
+        .btn-clicked {
+            background-color: #2f4f4f; /* Dark Gray */
+
+            position: relative;
+
+        }
+
+        .btn-guessed {
+            background-color: #467070; /* Dark Gray */
+
+        }
+
+        .btn-unguessed {
+            background-color: #2f4f4f; /* Dark Gray */
+            color: #2f4f4f;
+        }
+
+        .guess-incorrect {
+            background-color: #000000;
+            color: wheat;
+        }
+
+        .guess-correct {
+            background-color: lightblue;
+            color: black;
+        }
+
+        .guess-correctWord {
+            background-color: wheat;
+            color: black;
+        }
+
+
+        .dash {
+            max-width: 50px;
+            width: 5%;
+            height: 40px;
+            border-radius: 3px;
+            font-size: 1.2rem;
+            padding: 5px; /* Padding between buttons */
+            margin: 0px; /* Margin between buttons */
+            background-opacity: 0; /* Dark Gray */
+            color: #f0f0f0; /* Light Text */
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-submit {
+            /*small font and dark color*/
+            font-size: 14px;
+            font-align: center;
+            background-color: #2f4f4f; /* Dark Gray */
+            min-width: 50px;
+            /* no internal padding */
+            padding: 0;
+            line-height: 14px;
+            /* bold text */
+            font-weight: bold;
+            color: #5a9898;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-backspace {
+            /*small font and dark color*/
+            font-size: 14px;
+            font-align: center;
+            background-color: #2f4f4f; /* Dark Gray */
+            min-width: 35px;
+            /* no internal padding */
+            padding: 0;
+            line-height: 14px;
+            /* bold text */
+            font-weight: bold;
+            color: #3e6969;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        #toast {
+            color: #3e6969;
+            font-family: 'Futura', sans-serif;
+            font-size: 10px;
+            padding: 3px;
+
+        }
+
+        #toast2 {
+            color: #3e6969;
+            font-family: 'Futura', sans-serif;
+            font-size: 10px;
+            padding: 3px;
+
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+
+        #top {
+            vertical-align: top;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #bottom {
+            vertical-align: bottom;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #wonTitle {
+            color: goldenrod;
+        }
+
+        #lostTitle {
+            color: #420f0f;
+        }
+
+        #share-text1 {
+            color: wheat;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        #share-text2 {
+            color: #181717;
+            font-size: 15px;
+            text-align: center;
+        }
+
+
+        /* Styling for Today's theme text */
+        #theme-text {
+            color: #f0f0f0; /* Light Text */
+            margin-right: 10px; /* Spacing between text and theme */
+        }
+
+        .group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flex-container {
+            display: flex;
+            align-items: center; /* Optional: if you want to align the items vertically */
+        }
+
+        @font-face {
+            font-family: 'Protest Strike';
+            src: url('fonts/ProtestStrike-Regular.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Futura';
+            src: url('fonts/Futura.ttf') format('truetype');
+        }
+
+        #helpTitle {
+            color: #000000;
+            font-family: Arial;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        #help-text {
+            color: #6c5d5d;
+            font-family: Arial;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .modal-content {
+            background-color: black;
+        }
+
+        /* CSS */
+        #helpButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid wheat;
+            border-radius: 50%;
+            background-color: transparent;
+            color: wheat;
+            font-size: 24px;
+            text-align: center;
+            font-family: "arial";
+        }
+
+        #archiveButton {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            width: 90px;
+            height: 50px;
+            border: 2px solid wheat;
+            border-radius: 15%;
+            background-color: transparent;
+            color: wheat;
+            font-size: 24px;
+            text-align: center;
+        }
+
+
+        .counter {
+            position: absolute;
+            top: -25%;
+            right: -25%;
+            border: 1px solid black;
+            width: 50%;
+            height: 50%;
+            z-index: 100;
+            background-color: #3e6969;
+            border-radius: 2px;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            font-size: 12px;
+        }
+
+        .archive-card {
+            min-height: 50px;
+            margin-top: 10px;
+            background-color: midnightblue;
+            text-align: center;
+            justify-content: center;
+            border-radius: 5px;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+        }
+
+        .scroll-container {
+            width: 100%;
+            height: 500px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }

@@ -27,7 +27,6 @@ function generateArchiveLinks() {
     //get the current day
     daysAfter2024();
 
-    let archiveText = document.getElementById("archive-text");
     let archiveLinks = document.getElementById("archive-links");
     //make it a bootstrap 3xn grid, styled as cards
     let row = document.createElement("div");
@@ -43,7 +42,7 @@ function generateArchiveLinks() {
         col.appendChild(link);
         row.appendChild(col);
         count++;
-        if (count == 3) {
+        if (count === 3) {
             archiveLinks.appendChild(row);
             row = document.createElement("div");
             row.className = "row";
@@ -84,8 +83,8 @@ function seededRandom() {
     return seed / m;
 }
 
-function jumble(word, seed) {
-    let jumbled = "";
+function jumble(word) {
+    let jumbled;
     //remove any spaces
     word = word.replace(/\s/g, "");
     //lowercase the word
@@ -132,16 +131,16 @@ function loadStuff(words) {
     //uppercase phrase
     phrase = phrase.toUpperCase();
     //jumble up the phrase, using a fixed seed
-    let jumbled = jumble(phrase, 0);
+    let jumbled = jumble(phrase);
     console.log(jumbled);
     // set the theme element
     document.getElementById("theme").innerHTML = theme;
     // set the jumbled element
-    createJumbledElement(jumbled);
+    createJumbledElement();
 
 }
 
-function createJumbledElement(jumbled) {
+function createJumbledElement() {
     //create the current guess
     currentGuess = "";
     let phraseArray = phrase.split("");
@@ -215,7 +214,6 @@ function buttonPressed(event) {
         //work out what number child this is
         let value = Array.prototype.indexOf.call(event.target.parentElement.children, event.target);
         let guessArray = currentGuess.split("");
-        let prevValue = guessArray[value];
         guessArray[value] = "_";
         currentGuess = guessArray.join("");
         //switch the class to btn-unclicked
@@ -319,7 +317,7 @@ function submitPressed() {
                 trysRemainingChildren[i].src = "icons/greenDot.png";
             } else {
                 trysRemainingChildren[i].src = "icons/redDot.png";
-                if (i != trysRemainingChildren.length - 1)
+                if (i !== trysRemainingChildren.length - 1)
                     finished = false;
             }
             break;
@@ -375,7 +373,7 @@ function handleKeyPress(event) {
         return;
     }
     //get the key pressed
-    let key = "";
+    let key;
     //if event is a string, get the key from the string
     if (typeof event === "string") {
         console.log(event);
@@ -410,7 +408,7 @@ function handleKeyPress(event) {
     if (key === "ENTER" || key === "SUBMIT") {
         submitPressed();
     }
-    if (key == "RESET") {
+    if (key === "RESET") {
         resetPressed();
     }
 }
@@ -498,7 +496,7 @@ function generateResults(plaintext) {
         let guessArray = guess.split("");
         let wordsSplit = phrase.split(" ");
         let resultsArray = [];
-        for(let i = 0; i < guessArray.length; i++) {
+        for (let i = 0; i < guessArray.length; i++) {
             if (guessArray[i] === "-") {
                 resultsArray.push("-");
             } else {
@@ -572,8 +570,6 @@ function storeGuesses() {
         return;
     }
     //store the guesses in local storage, set to expire at midnight
-    let date = new Date();
-    let midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
     let expiry = todaysDay;
     //store the guesses
     localStorage.setItem("guesses", JSON.stringify(guesses));
@@ -585,9 +581,9 @@ function loadGuesses() {
         return;
     }
     //load the guesses from local storage
-    let date = new Date();
     let expiry = localStorage.getItem("expiry");
-    if (expiry != todaysDay) {
+    let tempGuesses;
+    if (expiry !== todaysDay) {
         //clear the guesses
         guesses = [];
         storeGuesses();
@@ -596,8 +592,7 @@ function loadGuesses() {
         //make the guesses
         //for each guess
         for (let i = 0; i < tempGuesses.length; i++) {
-            let guess = tempGuesses[i];
-            currentGuess = guess;
+            currentGuess = tempGuesses[i];
             //update the text for the guess
             updateGuess();
             submitPressed();
@@ -611,11 +606,11 @@ window.onload = function () {
     document.getElementById('shareButton1').addEventListener('click', async () => {
         console.log("share button pressed");
         try {
-            //check if sharing is supported or we are on firefox mobile (firefox mobile share is broken)
+            //check if sharing is supported, or we are on firefox mobile (firefox mobile share is broken)
             if (!navigator.share || navigator.userAgent.includes("Firefox")) {
                 console.log('Web Share API not supported');
                 //copy the results to the clipboard
-                navigator.clipboard.writeText(generateResults(true));
+                await navigator.clipboard.writeText(generateResults(true));
                 //display a toast
                 let toast = document.getElementById("toast");
                 toast.className = "show";
@@ -636,11 +631,11 @@ window.onload = function () {
     });
     document.getElementById('shareButton2').addEventListener('click', async () => {
         try {
-            //check if sharing is supported or we are on firefox mobile (firefox mobile share is broken)
+            //check if sharing is supported, or we are on firefox mobile (firefox mobile share is broken)
             if (!navigator.share || navigator.userAgent.includes("Firefox")) {
                 console.log('Web Share API not supported');
                 //copy the results to the clipboard
-                navigator.clipboard.writeText(generateResults(true));
+                await navigator.clipboard.writeText(generateResults(true));
                 //display a toast
                 let toast = document.getElementById("toast2");
                 toast.className = "show";
