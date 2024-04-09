@@ -59,7 +59,9 @@ function daysAfter2024() {
 
     const now = new Date();
     const start = new Date(2024, 2, 27); // Note: JavaScript counts months from 0
-    const diff = now - start;
+    let diff = now - start;
+    //subtract the timezone offset
+    diff -= now.getTimezoneOffset() * 60 * 1000;
     const oneDay = 1000 * 60 * 60 * 24;
     const days = Math.floor(diff / oneDay);
     todaysDay = days;
@@ -609,8 +611,8 @@ window.onload = function () {
     document.getElementById('shareButton1').addEventListener('click', async () => {
         console.log("share button pressed");
         try {
-            //check if sharing is supported
-            if (!navigator.share) {
+            //check if sharing is supported or we are on firefox mobile (firefox mobile share is broken)
+            if (!navigator.share || navigator.userAgent.includes("Firefox")) {
                 console.log('Web Share API not supported');
                 //copy the results to the clipboard
                 navigator.clipboard.writeText(generateResults(true));
@@ -626,7 +628,6 @@ window.onload = function () {
             await navigator.share({
                 title: 'Jumble',
                 text: res,
-                url: "https://thomas-chernaik.github.io/jumble/",
             });
             console.log('Data was shared successfully');
         } catch (err) {
@@ -635,8 +636,8 @@ window.onload = function () {
     });
     document.getElementById('shareButton2').addEventListener('click', async () => {
         try {
-            //check if sharing is supported
-            if (!navigator.share) {
+            //check if sharing is supported or we are on firefox mobile (firefox mobile share is broken)
+            if (!navigator.share || navigator.userAgent.includes("Firefox")) {
                 console.log('Web Share API not supported');
                 //copy the results to the clipboard
                 navigator.clipboard.writeText(generateResults(true));
@@ -652,7 +653,6 @@ window.onload = function () {
             await navigator.share({
                 title: 'Jumble',
                 text: res,
-                url: "https://thomas-chernaik.github.io/jumble/",
             });
             console.log('Data was shared successfully');
         } catch (err) {
