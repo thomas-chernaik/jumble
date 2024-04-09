@@ -580,10 +580,16 @@ function loadGuesses() {
     if (playingArchive) {
         return;
     }
+    console.log("loading guesses");
     //load the guesses from local storage
     let expiry = localStorage.getItem("expiry");
+    //convert the expiry to a number
+    expiry = parseInt(expiry);
     let tempGuesses;
     if (expiry !== todaysDay) {
+        console.log(expiry);
+        console.log(todaysDay);
+        console.log("expiry date has passed");
         //clear the guesses
         guesses = [];
         storeGuesses();
