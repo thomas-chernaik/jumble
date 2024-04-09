@@ -54,7 +54,7 @@ function generateArchiveLinks() {
 function daysAfter2024() {
     //check and see if we are playing an archive game from the url parameters
     const urlParams = new URLSearchParams(window.location.search);
-    const archive = urlParams.get('archive');
+    const archive = parseInt(urlParams.get('archive'));
 
     const now = new Date();
     const start = new Date(2024, 2, 27); // Note: JavaScript counts months from 0
