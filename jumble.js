@@ -627,7 +627,7 @@ window.onload = function () {
             }
             let res = generateResults(true);
             await navigator.share({
-                title: 'Jumble',
+                title: 'Oops, I spilled my phrase',
                 text: res,
             });
             console.log('Data was shared successfully');
@@ -652,7 +652,7 @@ window.onload = function () {
             }
             let res = generateResults(true);
             await navigator.share({
-                title: 'Jumble',
+                title: 'Oops, I spilled my phrase',
                 text: res,
             });
             console.log('Data was shared successfully');
