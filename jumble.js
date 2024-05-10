@@ -182,7 +182,7 @@ function createInput() {
             //make the letter uppercase
             button.innerHTML = "_";
             //add the event listener
-            button.onclick = buttonPressed;
+            //button.onclick = buttonPressed;
             wordElement.appendChild(button);
 
         }
