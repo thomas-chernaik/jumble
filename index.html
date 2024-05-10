@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jumble</title>
+    <title>OISMP</title>
 
     <!-- Import Futura font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Futura:wght@700&display=swap">
@@ -19,7 +19,8 @@
     <button id="helpButton" data-bs-toggle="modal" data-bs-target="#helpModal">?</button>
     <button id="archiveButton" data-bs-toggle="modal" data-bs-target="#archiveModal">Archive</button>
     <div id="title" class="text-center mt-5">
-        <h1 onclick="window.location.href='/jumble';">Jumble</h1>
+        <!-- thanks hazel for the title -->
+        <h1 onclick="window.location.href = window.location.pathname;">Oops, I spilled my phrase!</h1>
         <h5 id="archive"></h5>
     </div>
     <hr>
@@ -141,7 +142,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="wonTitle">Well done for solving today's Jumble</h5>
+                        <h5 class="modal-title" id="wonTitle">Well done, my phrase has been un-spilled !!!</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
@@ -165,7 +166,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="lostTitle">You failed to solve todays modal</h5>
+                        <h5 class="modal-title" id="lostTitle">You didn't un-spill my phrase. It seeps through the cracks and will remain unknown :(</h5>
                         <button type="button" class="btn-close  btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -193,7 +194,7 @@
                     <div class="modal-body">
                         <div id="help-text">
                             <h3>
-                                Use the clue to unscramble the phrase and solve the Jumble!
+                                I spilled my phrase! Use the clue to help unscramble it.
                             </h3>
                             <hr>
                             <h4>

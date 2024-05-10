@@ -484,7 +484,7 @@ function updateKeyboard() {
 
 function generateResults(plaintext) {
     let today = daysAfter2024();
-    let fullResults = "Jumble " + today + " " + guesses.length + "/6";
+    let fullResults = "Oops, I spilled my phrase " + today + " " + guesses.length + "/6";
     fullResults += "<br>";
     fullResults += "Clue: " + words[today].context;
     console.log(fullResults);
