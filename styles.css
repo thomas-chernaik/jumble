@@ -255,9 +255,9 @@
             top: 10px;
             left: 10px;
             width: 90px;
-            height: 50px;
-            border: 2px solid wheat;
-            border-radius: 15%;
+            height: 40px;
+            border: 1px solid wheat;
+            border-radius: 10%;
             background-color: transparent;
             color: wheat;
             font-size: 24px;
@@ -299,4 +299,8 @@
             height: 500px;
             overflow-y: scroll;
             overflow-x: hidden;
+        }
+
+        .title{
+
         }
