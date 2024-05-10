@@ -117,6 +117,8 @@ function loadStuff(words) {
     if (playingArchive) {
         let options = {year: 'numeric', month: 'long', day: 'numeric'};
         document.getElementById("archive").innerHTML = "Playing archive game from " + archiveDate.toLocaleDateString('default', options);
+        //add the archiveCard class to the archive element
+        document.getElementById("archive").className = "archive-date";
     }
     //get the word of the day
     if (diff > words.length) {
