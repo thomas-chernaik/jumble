@@ -9,6 +9,7 @@ let guesses = [];
 let remainingLetters = {};
 let playingArchive = false;
 let archiveDate = Date.now();
+let needToShowModal = null;
 
 //get the json data from the file (jumble.json)
 fetch('jumble.json')
@@ -65,6 +66,8 @@ function daysAfter2024() {
     const days = Math.floor(diff / oneDay);
     todaysDay = days;
     if (archive) {
+        //delete the play screen
+        removeElement("play", 0);
         playingArchive = true;
         archiveDate = new Date(start);
         archiveDate.setDate(archiveDate.getDate() + archive);
@@ -114,6 +117,7 @@ function jumble(word) {
 function loadStuff(words) {
     //get the day
     let diff = daysAfter2024();
+    document.getElementById("todays-number").innerHTML = diff;
     if (playingArchive) {
         let options = {year: 'numeric', month: 'long', day: 'numeric'};
         document.getElementById("archive").innerHTML = "Playing archive game from " + archiveDate.toLocaleDateString('default', options);
@@ -333,7 +337,12 @@ function submitPressed() {
         let shareText = document.getElementById("share-text2");
         shareText.innerHTML = generateResults(false);
         let modalInstance = new bootstrap.Modal(modal);
-        modalInstance.show();
+        //check if the play element is still there
+        if (document.getElementById("play") !== null) {
+            needToShowModal = modalInstance;
+        } else {
+            modalInstance.show();
+        }
     }
     if (isCorrect) {
         //bring up a modal with an image in it
@@ -342,7 +351,11 @@ function submitPressed() {
         let shareText = document.getElementById("share-text1");
         shareText.innerHTML = generateResults(false);
         let modalInstance = new bootstrap.Modal(modal);
-        modalInstance.show();
+        if (document.getElementById("play") !== null) {
+            needToShowModal = modalInstance;
+        } else {
+            modalInstance.show();
+        }
         finished = true;
     }
 
@@ -662,8 +675,49 @@ window.onload = function () {
             console.log('Failed to share:', err);
         }
     });
+    //get todays date
+    let today = new Date();
+    let dd = today.getDate();
+    //get it in Monday 20th March 2024 format
+    let options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+    let date = today.toLocaleDateString('default', options);
+    //set the date element
+    document.getElementById("todays-date").innerHTML = date;
 
 
+}
+
+function getCookie(name) {
+    let value = "; " + document.cookie;
+    let parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function setCookie(name, value, days) {
+    let date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    let expires = "; expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function removeElement(elementId, delay = 1000) {
+    // Get the element
+    var element = document.getElementById(elementId);
+
+    // If the element exists, start the fade out process
+    if (element) {
+        // Add the fade-out class to start the transition
+        element.classList.add('fade-out');
+
+        // Wait for the transition to finish (1s) then remove the element
+        setTimeout(function () {
+            element.remove();
+        }, delay);
+    }
+}
+
+function play() {
+    removeElement("play");
     //add a cookie to count the number of times this page has been visited
     let visits = parseInt(getCookie("visits"));
     if (isNaN(visits)) {
@@ -679,17 +733,8 @@ window.onload = function () {
         let modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
     }
-}
 
-function getCookie(name) {
-    let value = "; " + document.cookie;
-    let parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift();
-}
-
-function setCookie(name, value, days) {
-    let date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    let expires = "; expires=" + date.toUTCString();
-    document.cookie = name + "=" + value + expires + "; path=/";
+    if (needToShowModal !== null) {
+        needToShowModal.show();
+    }
 }

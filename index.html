@@ -25,7 +25,7 @@
 
 <div class="container">
     <div class="title">
-        <img src="android-chrome-512x512.png" alt="icon" id="logo"
+        <img src="logo.png" alt="icon" id="logo"
              onclick="window.location.href = window.location.pathname;">
         <span id="name" onclick="window.location.href = window.location.pathname;">Oops, I spilled my phrase!</span>
         <span id="buttons">
@@ -202,9 +202,6 @@
         </div>
 
 
-
-
-
         <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -292,6 +289,25 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="play-content-container" id="play">
+        <div class="play-content">
+            <img src="logo.png" alt="icon" id="play-icon">
+            <h2 style="color: #181717">Oops, I spilled my phrase!</h2>
+            <p>Un-spill the phrase within 6 guesses</p>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="play()" id="play-button">play</button>
+        <br>
+        <div class="play-content">
+                        <p>Game #<span id="todays-number"></span></p>
+                        <p><span id="todays-date"</p>
+            <br>
+            <p id="foot">Created by <a href="https://github.com/thomas-chernaik/">Thomas Chernaik</a></p>
+
+
+
+        </div>
+
     </div>
 </div>
 

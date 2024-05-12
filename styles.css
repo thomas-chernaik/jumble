@@ -352,6 +352,68 @@ body {
     cursor: pointer;
 }
 
+#play-button{
+    font-family: 'Protest Strike';
+    width: 20%;
+    max-width: 100px;
+    /*center the button*/
+    margin: 1% auto;
+
+
+}
+#foot{
+    /*put it to the bottom of the page*/
+    position: absolute;
+    bottom: 0;
+}
+#foot a{
+    /*set the color to be white*/
+    color: white;
+    /*set the pointer to be a hand */
+    cursor: pointer;
+}
+.play-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+#play-icon{
+    width: 30%;
+    max-width: 100px;
+}
+
+.fullscreen{
+    /*set the height to be 100% of the parent container*/
+    height: 100%;
+    /*set the width to be 100% of the parent container*/
+    width: 100%;
+}
+.fade-out {
+    transition: opacity 0.5s ease-out;
+    opacity: 0;
+}
+.play-content-container{
+    /*set to be full screen, absolute position*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /*set the background color to be dark*/
+    background-color: #49b6a9;
+    /*set the z-index to be the highest*/
+    z-index: 100;
+    /*set the display to be flex*/
+    display: flex;
+    /*set the flex direction to be column*/
+    flex-direction: column;
+    /*set the justify content to be center*/
+    justify-content: center;
+}
+
+
 /* set the help button to align right when horizontal */
 @media (min-width: 768px) {
     #buttons {
