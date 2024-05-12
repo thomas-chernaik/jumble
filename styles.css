@@ -114,6 +114,11 @@ body {
     justify-content: center;
 }
 
+.btn-submit-available{
+    background-color: #467070; /* light gray */
+    color: #f0f0f0; /* Light Text */
+}
+
 .btn-backspace {
     /*small font and dark color*/
     font-size: 14px;

@@ -426,7 +426,21 @@ function handleKeyPress(event) {
     if (key === "RESET") {
         resetPressed();
     }
+
+    updateSubmitHighlight();
 }
+
+function updateSubmitHighlight(){
+    let submit = document.getElementById("submit");
+    //see if there are any _ in the current guess
+    if(currentGuess.includes("_")){
+        submit.className = "btn-submit btn-custom";
+    }
+    else{
+        submit.className = "btn-submit-available btn-submit btn-custom";
+    }
+}
+
 
 function handleButtonPress(key) {
     //get the div that was clicked
