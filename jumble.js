@@ -10,20 +10,20 @@ let remainingLetters = {};
 let playingArchive = false;
 let archiveDate = Date.now();
 let needToShowModal = null;
-
+async function fetchJson() {
 //get the json data from the file (jumble.json)
-fetch('jumble.json')
-    .then(response => response.text())
-    .then(data => {
-        words = JSON.parse(data);
-        console.log(words);
-        loadStuff(words);
-        loadGuesses();
-        updateKeyboard();
-        generateArchiveLinks();
+    await fetch('jumble.json')
+        .then(response => response.text())
+        .then(data => {
+            words = JSON.parse(data);
+            console.log(words);
+            loadStuff(words);
+            loadGuesses();
+            updateKeyboard();
+            generateArchiveLinks();
 
-    });
-
+        });
+}
 function generateArchiveLinks() {
     //get the current day
     daysAfter2024();
@@ -66,8 +66,6 @@ function daysAfter2024() {
     const days = Math.floor(diff / oneDay);
     todaysDay = days;
     if (archive) {
-        //delete the play screen
-        removeElement("play", 0);
         playingArchive = true;
         archiveDate = new Date(start);
         archiveDate.setDate(archiveDate.getDate() + archive);
@@ -117,7 +115,6 @@ function jumble(word) {
 function loadStuff(words) {
     //get the day
     let diff = daysAfter2024();
-    document.getElementById("todays-number").innerHTML = diff;
     if (playingArchive) {
         let options = {year: 'numeric', month: 'long', day: 'numeric'};
         document.getElementById("archive").innerHTML = "Playing archive game from " + archiveDate.toLocaleDateString('default', options);
@@ -430,13 +427,12 @@ function handleKeyPress(event) {
     updateSubmitHighlight();
 }
 
-function updateSubmitHighlight(){
+function updateSubmitHighlight() {
     let submit = document.getElementById("submit");
     //see if there are any _ in the current guess
-    if(currentGuess.includes("_")){
+    if (currentGuess.includes("_")) {
         submit.className = "btn-submit btn-custom";
-    }
-    else{
+    } else {
         submit.className = "btn-submit-available btn-submit btn-custom";
     }
 }
@@ -689,6 +685,12 @@ window.onload = function () {
             console.log('Failed to share:', err);
         }
     });
+
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
     //get todays date
     let today = new Date();
     let dd = today.getDate();
@@ -699,7 +701,21 @@ window.onload = function () {
     document.getElementById("todays-date").innerHTML = date;
 
 
-}
+    let diff = daysAfter2024();
+    document.getElementById("todays-number").innerHTML = diff;
+
+
+    //get the archive parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    let archive = parseInt(urlParams.get('archive'));
+    //if the archive parameter is set, delete the play element
+    if (archive) {
+        removeElement("play", 0);
+    }
+    fetchJson().then(r => console.log("done"));
+    // Run the function on initial load
+    checkAspectRatio();
+});
 
 function getCookie(name) {
     let value = "; " + document.cookie;
@@ -752,3 +768,17 @@ function play() {
         needToShowModal.show();
     }
 }
+
+function checkAspectRatio() {
+    if (window.innerHeight > window.innerWidth) {
+        document.body.classList.add('height-greater');
+        document.body.classList.remove('width-greater');
+    } else {
+        document.body.classList.remove('height-greater');
+        document.body.classList.add('width-greater');
+    }
+}
+
+// Run the function when the window is resized
+window.onresize = checkAspectRatio;
+

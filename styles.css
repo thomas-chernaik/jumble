@@ -420,7 +420,7 @@ body {
 
 
 /* set the help button to align right when horizontal */
-@media (min-width: 768px) {
+.width-greater{
     #buttons {
         position: absolute;
         right: 5%;
@@ -435,7 +435,7 @@ body {
     }
 }
 /* set the title to have smaller font size when vertical */
-@media (max-width: 768px) {
+.height-greater{
     .title{
         font-size: 20px;
         min-height: 45px;
