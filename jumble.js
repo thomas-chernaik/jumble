@@ -662,4 +662,34 @@ window.onload = function () {
             console.log('Failed to share:', err);
         }
     });
+
+
+    //add a cookie to count the number of times this page has been visited
+    let visits = parseInt(getCookie("visits"));
+    if (isNaN(visits)) {
+        visits = 0;
+    }
+    visits++;
+    //set the cookie to expire in 7 days
+
+    setCookie("visits", visits, 7);
+    //if the visits are less than 3, show the help modal
+    if (visits < 3) {
+        let modal = document.getElementById("helpModal");
+        let modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+    }
+}
+
+function getCookie(name) {
+    let value = "; " + document.cookie;
+    let parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function setCookie(name, value, days) {
+    let date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    let expires = "; expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + expires + "; path=/";
 }

@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oops, I spilled my phrase!</title>
 
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+
     <!-- Import Futura font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Futura:wght@700&display=swap">
     <!-- Bootstrap CSS -->
@@ -18,7 +24,10 @@
 <body>
 
 <div class="container">
-    <div class="title"><span id="name" onclick="window.location.href = window.location.pathname;">Oops, I spilled my phrase!</span>
+    <div class="title">
+        <img src="android-chrome-512x512.png" alt="icon" id="logo"
+             onclick="window.location.href = window.location.pathname;">
+        <span id="name" onclick="window.location.href = window.location.pathname;">Oops, I spilled my phrase!</span>
         <span id="buttons">
         <button id="helpButton" data-bs-toggle="modal" data-bs-target="#helpModal"><i
                 class="fa-regular fa-circle-question"></i></button>
@@ -28,7 +37,7 @@
         </button></span>
     </div>
     <hr id="headerhr">
-    <div id="archive"  data-bs-toggle="modal" data-bs-target="#archiveModal"></div>
+    <div id="archive" data-bs-toggle="modal" data-bs-target="#archiveModal"></div>
     <div id="theme-container">
         <span id="theme-text">Today's clue is:</span>
         <div id="theme">
@@ -202,22 +211,46 @@
                     <div class="modal-body">
                         <div id="help-text">
                             <h3>
-                                I spilled my phrase! Use the clue to help unscramble it.
+                                I spilled my phrase! You need to use the clue to work it out.
                             </h3>
+                            <div id="theme-container">
+                                <span id="theme-text">Today's clue is:</span>
+                                <div id="theme">
+                                    The name of the game
+                                </div>
+
+                            </div>
                             <hr>
                             <h4>
-                                You have six attempts, given feedback after each.
+                                After you have made a guess, I will give you some feedback.
                                 <br>
-                                <br>
-                                A correct letter will be highlighted in light blue, a letter in the correct word but
-                                in
-                                the
-                                wrong position will be highlighted in yellow, and an incorrect letter will be
-                                highlighted in
-                                black.
-                                <br>
-                                <br>
-                                Good luck!
+                                Letters which belong to another word are coloured black.
+                                <div class="help-row">
+                                    <div class="guess-incorrect btn-custom">Q</div>
+                                    <div class="guess-incorrect btn-custom">B</div>
+                                    <div class="guess-incorrect btn-custom">M</div>
+                                    <div class="guess-incorrect btn-custom">V</div>
+                                    <div class="guess-incorrect btn-custom">C</div>
+                                </div>
+
+                                Letters in the right word but wrong position get highlighted in yellow.
+                                <div class="help-row">
+                                    <div class="guess-correctWord btn-custom">I</div>
+                                    <div class="guess-correctWord btn-custom">P</div>
+                                    <div class="guess-correctWord btn-custom">O</div>
+                                    <div class="guess-correctWord btn-custom">S</div>
+                                    <div class="guess-correctWord btn-custom">M</div>
+                                </div>
+                                Correct letters get highlighted in light blue.
+                                <div class="help-row">
+                                    <div class="guess-correct btn-custom">O</div>
+                                    <div class="guess-correct btn-custom">I</div>
+                                    <div class="guess-correct btn-custom">S</div>
+                                    <div class="guess-correct btn-custom">M</div>
+                                    <div class="guess-correct btn-custom">P</div>
+                                </div>
+
+                                You get 6 attempts to un-spill the phrase. Good luck!
                             </h4>
                         </div>
 

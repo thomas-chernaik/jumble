@@ -192,6 +192,7 @@ body {
 #theme-text {
     color: #f0f0f0; /* Light Text */
     margin-right: 10px; /* Spacing between text and theme */
+    font-size: 1.3rem;
 }
 
 .group {
@@ -224,10 +225,16 @@ body {
 
 #help-text {
     color: #33caca;
-    font-family: Arial;
+    font-family: 'Protest Strike'
     font-weight: bold;
     font-size: 18px;
     text-align: center;
+}
+.help-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .modal-content {
@@ -314,6 +321,7 @@ body {
     flex-wrap: nowrap;
 }
 
+
 .title > * {
     padding: 5px;
 }
@@ -328,6 +336,21 @@ body {
     /* set the pointer to be a hand */
     cursor: pointer;
 }
+
+#buttons{
+    /*set no wrap for the buttons*/
+    flex-wrap: nowrap;
+}
+#logo{
+    position: absolute;
+    left: 1%;
+    top: 0.5%;
+    /*set the height to be 100% of the parent container*/
+    height: 60px;
+    /*set the pointer to be a hand */
+    cursor: pointer;
+}
+
 /* set the help button to align right when horizontal */
 @media (min-width: 768px) {
     #buttons {
@@ -343,3 +366,29 @@ body {
         font-size: 40px;
     }
 }
+/* set the title to have smaller font size when vertical */
+@media (max-width: 768px) {
+    .title{
+        font-size: 20px;
+        min-height: 45px;
+    }
+    #name{
+        position: absolute;
+        left: 10%;
+
+    }
+    #buttons{
+        position: absolute;
+        right: 5%;
+    }
+    #archiveButton{
+        font-size: 30px;
+    }
+    #helpButton{
+        font-size: 30px;
+    }
+    #logo{
+        height: 40px;
+    }
+}
+
