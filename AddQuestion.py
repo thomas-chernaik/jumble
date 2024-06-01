@@ -9,6 +9,11 @@ for item in data:
 if phrase.lower() in phrases:
     print("Phrase already exists!")
     exit()
+#check phrase only contains letters and spaces
+for c in phrase:
+    if not c.isalpha() and c != " ":
+        print("Phrase should only contain letters and spaces!")
+        exit()
 context = input("Please enter the clue for the phrase: ")
 data.append({"phrase": phrase, "context": context})
 with open('jumble.json', 'w') as f:
