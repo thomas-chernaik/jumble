@@ -373,7 +373,7 @@ body {
 }
 #foot a{
     /*set the color to be white*/
-    color: midnightblue;
+    color: white;
     /*set the pointer to be a hand */
     cursor: pointer;
 }
@@ -407,8 +407,7 @@ body {
     right: 0;
     bottom: 0;
     /*set the background color to be dark*/
-    /*background-color: #49b6a9;*/
-    background-color: #FFC0CB;
+    background-color: #49b6a9;
     /*set the z-index to be the highest*/
     z-index: 100;
     /*set the display to be flex*/
@@ -417,7 +416,6 @@ body {
     flex-direction: column;
     /*set the justify content to be center*/
     justify-content: center;
-    color: midnightblue;
 }
 
 
