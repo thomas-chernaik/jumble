@@ -8,7 +8,7 @@ let todaysDay = 0;
 let guesses = [];
 let remainingLetters = {};
 let playingArchive = false;
-let archiveDate = Date.now();
+let archiveDate = "";
 let needToShowModal = null;
 async function fetchJson() {
 //get the json data from the file (jumble.json)
@@ -17,29 +17,67 @@ async function fetchJson() {
         .then(data => {
             words = JSON.parse(data);
             console.log(words);
+            generateArchiveLinks();
             loadStuff(words);
             loadGuesses();
             updateKeyboard();
-            generateArchiveLinks();
 
         });
 }
+
+function getDatesWithGames(){
+    // returns a list of dates from the json file
+    let dates = [];
+    // read each element in the json and take the date
+    for (let i = 0; i < words.length; i++) {
+        let date = words[i].date;
+        // date is yyyymmdd
+        // convert to yyyy/mm/dd
+        let year = date.substring(0, 4);
+        let month = date.substring(4, 6);
+        let day = date.substring(6, 8);
+        let formattedDate = year + "/" + month + "/" + day;
+        dates.push(formattedDate);
+    }
+    return dates;
+}
+
+function isGameToday() {
+    //get todays date in yyyy/mm/dd format
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    let formattedToday = yyyy + '/' + mm + '/' + dd;
+    //get the dates with games
+    let datesWithGames = getDatesWithGames();
+    //check if todays date is in the list of dates with games
+    if (datesWithGames.includes(formattedToday)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function generateArchiveLinks() {
     //get the current day
-    daysAfter2024();
+    let dates = getDatesWithGames();
 
     let archiveLinks = document.getElementById("archive-links");
     //make it a bootstrap 3xn grid, styled as cards
     let row = document.createElement("div");
     row.className = "row";
     let count = 0;
-    for (let i = 0; i < todaysDay; i++) {
+    for (let i = 0; i < dates.length; i++) {
         let col = document.createElement("div");
         col.className = "col";
         let link = document.createElement("a");
-        link.href = "index.html?archive=" + i;
+        link.href = "index.html?archive=" + dates[i].replace(/\//g, '');
         link.className = "card archive-card";
-        link.innerHTML = "Archive day " + i;
+        // generate the date in a more readable format
+        let options = {year: 'numeric', month: 'long', day: 'numeric'};
+        let formattedDate = new Date(dates[i]).toLocaleDateString('default', options);
+        link.innerHTML = formattedDate;
         col.appendChild(link);
         row.appendChild(col);
         count++;
@@ -52,28 +90,25 @@ function generateArchiveLinks() {
     }
 }
 
-function daysAfter2024() {
-    //check and see if we are playing an archive game from the url parameters
+function isArchive()
+{
     const urlParams = new URLSearchParams(window.location.search);
-    const archive = parseInt(urlParams.get('archive'));
-
-    const now = new Date();
-    const start = new Date(2024, 2, 27); // Note: JavaScript counts months from 0
-    let diff = now - start;
-    //subtract the timezone offset
-    diff -= now.getTimezoneOffset() * 60 * 1000;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const days = Math.floor(diff / oneDay);
-    todaysDay = days;
-    if (archive) {
+    if (urlParams.get('archive')) {
         playingArchive = true;
-        archiveDate = new Date(start);
-        archiveDate.setDate(archiveDate.getDate() + archive);
-
-        return archive;
+        archiveDate = urlParams.get('archive');
     }
-    return days;
 }
+
+function getTodaysDate()
+{
+    // returns todays date as yyyymmdd
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    return yyyy + mm + dd;
+}
+
 
 function seededRandom() {
     seed += 1;
@@ -112,25 +147,39 @@ function jumble(word) {
     return jumbled;
 }
 
+let onHiatus = false;
+
 function loadStuff(words) {
     //get the day
-    let diff = daysAfter2024();
-    if (playingArchive) {
+    todaysDay = getTodaysDate();
+    isArchive();
+    if(playingArchive)
+    {
+        todaysDay = archiveDate;
+    }
+    // find the row in words with date todaysDay
+    let row = words.findIndex(obj => obj.date === todaysDay);
+    if (row === -1 && !playingArchive) {
+        // choose a random row, seeded on the current date
+        let date = new Date();
+        let seedString = date.getFullYear().toString() + (date.getMonth() + 1).toString() + date.getDate().toString();
+        seed = parseInt(seedString);
+        row = Math.floor(seededRandom() * words.length);
+        onHiatus = true;
+        document.getElementById("hiatus").style.display = "block";
+        archiveDate = words[row].date;
+        playingArchive = true;
+    }
+        if (playingArchive) {
         let options = {year: 'numeric', month: 'long', day: 'numeric'};
-        document.getElementById("archive").innerHTML = "Playing archive game from " + archiveDate.toLocaleDateString('default', options);
+        let formattedArchiveDate = archiveDate.substring(0, 4) + "/" + archiveDate.substring(4, 6) + "/" + archiveDate.substring(6, 8);
+        document.getElementById("archive").innerHTML = "Playing archive game from " + new Date(formattedArchiveDate).toLocaleDateString('default', options);
         //add the archiveCard class to the archive element
         document.getElementById("archive").className = "archive-date";
+        todaysDay = archiveDate;
     }
-    //get the word of the day
-    if (diff > words.length) {
-        // output an error message
-        document.body.innerHTML = "No word for today, remind my creator to update the words";
-        return;
-    }
-    console.log(diff);
-    console.log(words[diff]);
-    let theme = words[diff].context;
-    phrase = words[diff].phrase;
+    let theme = words[row].context;
+    phrase = words[row].phrase;
     //uppercase phrase
     phrase = phrase.toUpperCase();
     //jumble up the phrase, using a fixed seed
@@ -508,10 +557,15 @@ function updateKeyboard() {
 
 
 function generateResults(plaintext) {
-    let today = daysAfter2024();
-    let fullResults = "Oops, I spilled my phrase " + today + " " + guesses.length + "/6";
+
+    let options = {year: 'numeric', month: 'long', day: 'numeric'};
+    let today = todaysDay.substring(0, 4) + "/" + todaysDay.substring(4, 6) + "/" + todaysDay.substring(6, 8);
+    today = new Date(today).toLocaleDateString('default', options);
+    let fullResults = "Oops, I spilled my phrase " + today;
     fullResults += "<br>";
-    fullResults += "Clue: " + words[today].context;
+    // get the index of todaysDay in words
+    let index = words.findIndex(obj => obj.date === todaysDay);
+    fullResults += "Clue: " + words[index].context;
     console.log(fullResults);
     results = "";
     //construct the results from the guesses
@@ -595,7 +649,7 @@ function storeGuesses() {
         return;
     }
     //store the guesses in local storage, set to expire at midnight
-    let expiry = todaysDay;
+    let expiry = getTodaysDate();
     //store the guesses
     localStorage.setItem("guesses", JSON.stringify(guesses));
     localStorage.setItem("expiry", expiry);
@@ -611,9 +665,9 @@ function loadGuesses() {
     //convert the expiry to a number
     expiry = parseInt(expiry);
     let tempGuesses;
-    if (expiry !== todaysDay) {
+    if (expiry !== getTodaysDate()) {
         console.log(expiry);
-        console.log(todaysDay);
+        console.log(getTodaysDate());
         console.log("expiry date has passed");
         //clear the guesses
         guesses = [];
@@ -701,10 +755,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("todays-date").innerHTML = date;
 
 
-    let diff = daysAfter2024();
-    document.getElementById("todays-number").innerHTML = diff;
-
-
     //get the archive parameter
     const urlParams = new URLSearchParams(window.location.search);
     let archive = parseInt(urlParams.get('archive'));
@@ -781,4 +831,3 @@ function checkAspectRatio() {
 
 // Run the function when the window is resized
 window.onresize = checkAspectRatio;
-
